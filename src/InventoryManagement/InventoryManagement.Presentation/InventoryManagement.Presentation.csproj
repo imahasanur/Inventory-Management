@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\InventoryManagement.Data\InventoryManagement.Data.csproj" />
+    <ProjectReference Include="..\InventoryManagement.Service\InventoryManagement.Service.csproj" />
+  </ItemGroup>
+
 </Project>
