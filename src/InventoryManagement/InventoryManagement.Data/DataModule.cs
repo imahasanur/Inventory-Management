@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using InventoryManagement.Data.Membership;
 using InventoryManagement.Service;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,10 @@ namespace InventoryManagement.Data
 				.InstancePerLifetimeScope();
 
 			builder.RegisterType<ApplicationUnitOfWork>().As<IApplicationUnitOfWork>().InstancePerLifetimeScope();
-			//base.Load(builder);
-		}
+            builder.RegisterType<TokenService>().As<ITokenService>()
+            .InstancePerLifetimeScope();
+
+            //base.Load(builder);
+        }
 	}
 }

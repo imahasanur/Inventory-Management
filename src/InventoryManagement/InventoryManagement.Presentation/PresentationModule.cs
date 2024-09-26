@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using InventoryManagement.Presentation.Models;
 
 namespace InventoryManagement.Presentation
 {
@@ -6,7 +7,9 @@ namespace InventoryManagement.Presentation
 	{
 		protected override void Load(ContainerBuilder builder)
 		{
-			
-		}
+            builder.RegisterType<RegistrationModel>().AsSelf();
+            builder.RegisterType<LoginModel>().AsSelf();
+
+        }
 	}
 }

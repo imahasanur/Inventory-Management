@@ -13,6 +13,9 @@ using System.Reflection;
 using InventoryManagement.Data;
 using InventoryManagement.Service;
 using InventoryManagement.Presentation;
+using Autofac.Core;
+using InventoryManagement.Data.Membership;
+using Microsoft.AspNetCore.Authentication;
 
 Env.Load();
 
@@ -35,8 +38,9 @@ try
 		.AddEnvironmentVariables();
 
 	builder.Services.BindAndValidateOptions<ConnectionStringsOptions>(ConnectionStringsOptions.SectionName);
+    builder.Services.BindAndValidateOptions<ConnectionStringsOptions>(JwtOptions.SectionName);
 
-	builder.Host.UseSerilog((ctx, lc) => lc
+    builder.Host.UseSerilog((ctx, lc) => lc
 	.MinimumLevel.Debug()
 	.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
 	.Enrich.FromLogContext()
@@ -59,10 +63,25 @@ try
 		(m) => m.MigrationsAssembly(migrationAssembly)));
 
 	builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+	builder.Services.AddIdentity();
 
-	builder.Services.AddControllersWithViews();
+    builder.Services.AddJwtAuthentication(builder.Configuration["Jwt:Key"], builder.Configuration["Jwt:Issuer"],
+		builder.Configuration["Jwt:Audience"]);
+    builder.Services.AddControllersWithViews();
 
-	var app = builder.Build();
+   
+    builder.Services.AddControllersWithViews();
+    builder.Services.AddCookieAuthentication();
+
+    builder.Services.AddSession(options =>
+    {
+        options.IdleTimeout = TimeSpan.FromMinutes(30);
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+    });
+
+
+    var app = builder.Build();
 
 	// Configure the HTTP request pipeline.
 	if (app.Environment.IsDevelopment())
@@ -81,12 +100,15 @@ try
 
 	app.UseRouting();
 
+    app.UseSession();
+    app.UseAuthentication();
 	app.UseAuthorization();
+
 
 	app.MapControllerRoute(
 		name: "default",
 		pattern: "{controller=Home}/{action=Index}/{id?}");
-
+	//app.MapRazorPages();
 	app.Run();
 
 }
