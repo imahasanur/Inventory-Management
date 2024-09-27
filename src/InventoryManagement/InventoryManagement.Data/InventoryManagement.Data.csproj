@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Autofac" Version="7.1.0" />
-	  <PackageReference Include="MailKit" Version="4.4.0" />
+	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.17" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.14" />
@@ -22,10 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InventoryManagement.Service\InventoryManagement.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Repositories\" />
   </ItemGroup>
 
 </Project>

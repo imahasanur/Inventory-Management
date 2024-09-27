@@ -1,4 +1,4 @@
-﻿using InventoryManagement.Data.Domain.Entities;
+﻿using InventoryManagement.Service.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagement.Data.Domain.Repositories
+namespace InventoryManagement.Service.Domain.Repositories
 {
 	public interface IRepositoryBase<TEntity, TKey>
 		   where TEntity : class, IEntity<TKey>

@@ -9,7 +9,10 @@ namespace InventoryManagement.Presentation
 		{
             builder.RegisterType<RegistrationModel>().AsSelf();
             builder.RegisterType<LoginModel>().AsSelf();
+			builder.RegisterType<CreateCategoryModel>().AsSelf();
+			builder.RegisterType<EditCategoryModel>().AsSelf();
+			builder.RegisterType<DeleteCategoryModel>().AsSelf();
 
-        }
+		}
 	}
 }

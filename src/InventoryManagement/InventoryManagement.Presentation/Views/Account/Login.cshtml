@@ -16,12 +16,12 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                     <div class="form-floating mb-3">
                         <label asp-for="Email" class="form-label">Email</label>
-                        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" required/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
                         <label asp-for="Password" class="form-label">Password</label>
-                        <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" required />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <label asp-for="CaptchaInput">Captcha Input</label>
-                        <input asp-for="CaptchaInput" class="form-control" autocomplete="off" aria-required="true" placeholder="Enter Captcha" />
+                        <input asp-for="CaptchaInput" class="form-control" autocomplete="off" aria-required="true" placeholder="Enter Captcha" required/>
                         <span asp-validation-for="CaptchaInput" class="text-danger"></span>
                     </div>
 

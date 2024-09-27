@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using InventoryManagement.Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace InventoryManagement.Service
 	{
 		protected override void Load(ContainerBuilder builder)
 		{
-			
+			builder.RegisterType<CategoryManagementService>().As<ICategoryManagementService>().InstancePerLifetimeScope();
 		}
 	}
 }

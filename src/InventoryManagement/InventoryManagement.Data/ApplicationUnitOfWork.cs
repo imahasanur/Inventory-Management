@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Service;
+using InventoryManagement.Service.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,11 @@ namespace InventoryManagement.Data
 {
     public class ApplicationUnitOfWork : UnitOfWork, IApplicationUnitOfWork
     {
-        public ApplicationUnitOfWork(IApplicationDbContext dbContext) : base((DbContext)dbContext)
+		public ICategoryRepository CategoryRepository { get; private set; }
+		public ApplicationUnitOfWork(ICategoryRepository categoryRepository,
+            IApplicationDbContext dbContext) : base((DbContext)dbContext)
         {
+            CategoryRepository = categoryRepository;
         }
     }
 }

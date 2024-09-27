@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using InventoryManagement.Data.Domain.Entities;
+using InventoryManagement.Service.Domain.Entities;
 
 namespace InventoryManagement.Data.Repositories
 {

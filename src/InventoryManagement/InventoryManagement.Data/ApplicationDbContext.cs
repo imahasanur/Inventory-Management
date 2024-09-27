@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using InventoryManagement.Data;
 using InventoryManagement.Data.Membership;
+using InventoryManagement.Service.Domain.Entities;
 
 namespace InventoryManagement.Data
 {
@@ -41,5 +42,6 @@ namespace InventoryManagement.Data
         {
             base.OnModelCreating(builder);
         }
-    }
+		public DbSet<Category> Category { get; set; }
+	}
 }

@@ -1,5 +1,5 @@
-﻿using InventoryManagement.Data.Domain.Entities;
-using InventoryManagement.Data.Domain.Repositories;
+﻿using InventoryManagement.Service.Domain.Entities;
+using InventoryManagement.Service.Domain.Repositories;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;

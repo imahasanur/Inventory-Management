@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagement.Data.Domain.Entities
+namespace InventoryManagement.Service.Domain.Entities
 {
 	public interface IEntity<T>
 	{
