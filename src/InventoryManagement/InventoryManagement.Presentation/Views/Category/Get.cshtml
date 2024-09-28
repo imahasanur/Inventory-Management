@@ -70,8 +70,8 @@
 				method: "POST",
 			},
 			columns: [
-				{ title: "Category Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input" },
-				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input" },
+				{ title: "Category Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
+				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
 				{
 					title: "Created Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
 					formatter: function (cell) {

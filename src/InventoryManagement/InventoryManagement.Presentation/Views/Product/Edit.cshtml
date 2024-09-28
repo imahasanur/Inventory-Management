@@ -135,11 +135,9 @@
 		const categoryDropdown = document.getElementById('categoryDropdown');
 		const categoryNameInput = document.getElementById('CategoryName');
 
-		// Listen for change events on the dropdown
 		categoryDropdown.addEventListener('change', function () {
 			const selectedOption = categoryDropdown.options[categoryDropdown.selectedIndex];
 
-			// Set the CategoryName input to the selected option's data-category-name attribute
 			const categoryName = selectedOption.getAttribute('data-category-name');
 			categoryNameInput.value = categoryName;
 		});
