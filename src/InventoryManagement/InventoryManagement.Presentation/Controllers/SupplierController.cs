@@ -8,79 +8,123 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using Humanizer;
 using InventoryManagement.Presentation.Others;
+using System.Drawing;
 
 namespace InventoryManagement.Presentation.Controllers
 {
-    public class CategoryController : Controller
+    public class SupplierController : Controller
     {
         private readonly ILifetimeScope _scope;
-        private readonly ILogger<CategoryController> _logger;
+        private readonly ILogger<SupplierController> _logger;
         private readonly LinkGenerator _linkGenerator;
-
-        public CategoryController(ILifetimeScope scope,
-            ILogger<CategoryController> logger,
+		private readonly string _imageDirectory = "wwwroot/uploads";
+		public SupplierController(ILifetimeScope scope,
+            ILogger<SupplierController> logger,
             LinkGenerator linkGenerator)
         {
             _scope = scope;
             _logger = logger;
             _linkGenerator = linkGenerator;
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = new CreateCategoryModel();
-            model.Resolve(_scope);
-            return View(model);
+            var model = new CreateSupplierModel();
+            model.Resolve(_scope);            
+			return View(model);
         }
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(CreateCategoryModel model)
+		public async Task<IActionResult> Create(CreateSupplierModel model)
 		{
 			if (!ModelState.IsValid)
 			{
                 _logger.LogInformation("Model state is not valid");
 				return View(model);
 			}
-            model.CreatedAtUtc = DateTime.UtcNow;
-			var categoryDto = await model.BuildAdapter().AdaptToTypeAsync<CreateCategoryDto>();
+			if (!Directory.Exists(_imageDirectory))
+			{
+				Directory.CreateDirectory(_imageDirectory);
+			}
+
+			if (model.ImageFile != null && model.ImageFile.Length > 0)
+			{
+				var uniqueFileName = $"{Guid.NewGuid()}.jpg";
+				var filePath = Path.Combine(_imageDirectory, uniqueFileName);
+
+				using (var imageStream = model.ImageFile.OpenReadStream())
+				using (var image = Image.FromStream(imageStream))
+				{
+					var resizedImage = ResizeImage(image, 250, 333); // Resize to 3:4 aspect ratio
+					resizedImage.Save(filePath, ImageFormat.Jpeg);
+				}
+
+				model.PhotoUrl = $"/uploads/{uniqueFileName}";
+				model.CreatedAtUtc = DateTime.UtcNow;
+			}
+			var supplierDto = await model.BuildAdapter().AdaptToTypeAsync<CreateSupplierDto>();
 			model.Resolve(_scope);
-			await model.CreateCategoryAsync(categoryDto);
+			await model.CreateSupplierAsync(supplierDto);
 
 			return RedirectToAction("Create");
 		}
 
+		private Image ResizeImage(Image img, int width, int height)
+		{
+			var destRect = new Rectangle(0, 0, width, height);
+			var destImage = new Bitmap(width, height);
+
+			destImage.SetResolution(img.HorizontalResolution, img.VerticalResolution);
+
+			using (var graphics = Graphics.FromImage(destImage))
+			{
+				graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+				graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+				graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+				graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+				graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+				using (var wrapMode = new System.Drawing.Imaging.ImageAttributes())
+				{
+					wrapMode.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
+					graphics.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
+				}
+			}
+
+			return destImage;
+		}
 		public async Task<IActionResult> Get()
 		{
-			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Category", action: "Get");
+			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Supplier", action: "Get");
 			if (url is null)
 			{
 				return View();
 			}
-			var viewModel = new CategoriesModel { EndpointUrl = url };
+			var viewModel = new SuppliersModel { EndpointUrl = url };
 			return View(viewModel);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Get([FromBody] TabulatorQueryDto dto)
 		{
-			var model = new CategoriesModel();
+			var model = new SuppliersModel();
 			model.Resolve(_scope);
-			var allCategoryDetails = await model.GetCategoriesAsync(dto.Page, dto.Size);
+			var allSupplierDetails = await model.GetSuppliersAsync(dto.Page, dto.Size);
 
-			var dataSet = allCategoryDetails;
+			var dataSet = allSupplierDetails;
 			var queryable = dataSet.data.AsQueryable();
 			var count = 0;
 
-			IQueryable<CategoriesDto>? filteredData = null;
+			IQueryable<SuppliersDto>? filteredData = null;
 
 			if (dto.Filters.Count > 0)
 			{
 				var expression = ExpressionMaker(
-					new List<string> { "id","name", "description", "createdAtUtc", "id" },
+					new List<string> { "id","photoUrl", "name", "contactPerson", "phoneNumber","address","createdAtUtc" ,"id" },
 					new List<string>(),
 					dto.Filters
 				);
 				filteredData = queryable.Where(expression);
-				count = allCategoryDetails.total;
+				count = allSupplierDetails.total;
 			}
 
 			if (dto.Sorters.Count > 0)
@@ -91,7 +135,7 @@ namespace InventoryManagement.Presentation.Controllers
 				if (filteredData is null)
 				{
 					filteredData = queryable.OrderBy(expression);
-					count = allCategoryDetails.total;
+					count = allSupplierDetails.total;
 				}
 				else
 				{
@@ -102,7 +146,7 @@ namespace InventoryManagement.Presentation.Controllers
 			if (filteredData is null)
 			{
 				filteredData = queryable;
-				count = allCategoryDetails.total;
+				count = allSupplierDetails.total;
 			}
 
 			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
@@ -173,16 +217,15 @@ namespace InventoryManagement.Presentation.Controllers
 			{
 				TempData["Id"] = id;
 			}
-			var model = new EditCategoryModel();
+			var model = new EditSupplierModel();
 			model.Resolve(_scope);
-			model = await model.GetCategoryByIdAsync(id);
+			model = await model.GetSupplierByIdAsync(id);
 			TempData["CreatedAtUtc"] = model.CreatedAtUtc;
-
 			return View(model);
 		}
 
 		[HttpPost, ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(EditCategoryModel model)
+		public async Task<IActionResult> Edit(EditSupplierModel model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -193,10 +236,29 @@ namespace InventoryManagement.Presentation.Controllers
 				model.CreatedAtUtc = (DateTime)TempData["CreatedAtUtc"];
 			}
 
+			if (!Directory.Exists(_imageDirectory))
+			{
+				Directory.CreateDirectory(_imageDirectory);
+			}
+
+			if (model.ImageFile != null && model.ImageFile.Length > 0)
+			{
+				var uniqueFileName = $"{Guid.NewGuid()}.jpg";
+				var filePath = Path.Combine(_imageDirectory, uniqueFileName);
+
+				using (var imageStream = model.ImageFile.OpenReadStream())
+				using (var image = Image.FromStream(imageStream))
+				{
+					var resizedImage = ResizeImage(image, 250, 333); // Resize to 3:4 aspect ratio
+					resizedImage.Save(filePath, ImageFormat.Jpeg);
+				}
+				model.PhotoUrl = $"/uploads/{uniqueFileName}";
+			}
+
 			model.UpdatedAtUtc = DateTime.UtcNow;
-			var response = await model.BuildAdapter().AdaptToTypeAsync<EditCategoryDto>();
+			var response = await model.BuildAdapter().AdaptToTypeAsync<EditSupplierDto>();
 			model.Resolve(_scope);
-			await model.EditCategoryAsync(response);
+			await model.EditSupplierAsync(response);
 			return RedirectToAction("Get");
 		}
 
@@ -205,14 +267,14 @@ namespace InventoryManagement.Presentation.Controllers
 		{
 			try
 			{
-				var model = new DeleteCategoryModel();
+				var model = new DeleteSupplierModel();
 				model.Resolve(_scope);
-				await model.DeleteCategoryByIdAsync(id);
-				return Json(new { success = true, message = "Category deleted successfully" });
+				await model.DeleteByIdAsync(id);
+				return Json(new { success = true, message = "Supplier deleted successfully" });
 			}
 			catch (Exception ex)
 			{
-				return Json(new { success = false, message = "Error deleting category: " + ex.Message });
+				return Json(new { success = false, message = "Error deleting Supplier: " + ex.Message });
 			}
 			return RedirectToAction("Get");
 		}

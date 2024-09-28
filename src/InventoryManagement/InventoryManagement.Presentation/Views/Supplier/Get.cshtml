@@ -1,6 +1,6 @@
-﻿@model ProductsModel
+﻿@model SuppliersModel
 @{
-	ViewBag.Title = "All Product";
+	ViewBag.Title = "All Supplier";
 	Layout = "_Layout";
 }
 
@@ -14,7 +14,7 @@
 <div class="card p-2 m-2">
 	<div class="card-body text-center shadow p-3 mb-5 bg-white rounded">
 		<div style="margin-bottom:50px;">
-			<h3 class="card-title ">Products Table </h3>
+			<h3 class="card-title ">Suppliers Table </h3>
 		</div>
 		<div id="main-table" class="shadow-sm p-2 mt-2 mb-3 bg-white rounded"></div>
 	</div>
@@ -73,18 +73,16 @@
 			columns: [
 				{ title: "Product Id", field: "id", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
 				{
-					title: "Product Photo", field: "photoUrl", headerSort: false,
+					title: "Supplier Photo", field: "photoUrl", headerSort: false,
 					formatter: function (cell, formatterParams) {
 						var url = cell.getValue();
-						return `<img src="${url}" alt="Product Picture" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">`;
+						return `<img src="${url}" alt="Supplier Picture" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">`;
 					}, width: 150, headerTooltip: true
 				},
-				{ title: "Product Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Category", field: "categoryName", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Catgory Id", field: "categoryId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Stock Level", field: "stockLevel", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Unit Price", field: "unitPrice", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Supplier Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Contact Person", field: "contactPerson", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Address", field: "address", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Contact Number", field: "phoneNumber", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
 				{
 					title: "Created Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
 					formatter: function (cell) {
@@ -114,7 +112,7 @@
 
 		Swal.fire({
 			title: 'Delete Product?',
-			text: `Are you sure you want to delete product: ${rowData.name} (ID: ${rowData.id})?`,
+			text: `Are you sure you want to delete Supplier: ${rowData.name} (ID: ${rowData.id})?`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonText: 'Delete!',
@@ -123,23 +121,23 @@
 			if (result.isConfirmed) {
 
 				$.ajax({
-					url: '@Url.Action("Delete", "Product")',
+					url: '@Url.Action("Delete", "Supplier")',
 					type: 'POST',
 					data: { id: rowData.id },
 					success: function (response) {
 						if (response.success) {
-							Swal.fire('Deleted!', 'Product record has been deleted.', 'success');
+							Swal.fire('Deleted!', 'Supplier record has been deleted.', 'success');
 							table.deleteRow(rowId);
 						} else {
-							Swal.fire('Error!', 'There was a problem deleting the product.', 'error');
+							Swal.fire('Error!', 'There was a problem deleting the supplier.', 'error');
 						}
 					},
 					error: function () {
-						Swal.fire('Error!', 'Unable to delete product.', 'error');
+						Swal.fire('Error!', 'Unable to delete supplier.', 'error');
 					}
 				});
 			} else if (result.dismiss === Swal.DismissReason.cancel) {
-				Swal.fire('Cancelled', 'The product is kept :)', 'info');
+				Swal.fire('Cancelled', 'The supplier is kept :)', 'info');
 			}
 		});
 	}
@@ -160,7 +158,7 @@
 		var table = Tabulator.findTable("#main-table")[0];
 		var rowData = table.getRow(rowId).getData();
 		setTimeout(function () {
-			window.location.href = '@Url.Action("Edit", "Product")/' + rowData.id;
+			window.location.href = '@Url.Action("Edit", "Supplier")/' + rowData.id;
 		}, 1000);
 	}
 

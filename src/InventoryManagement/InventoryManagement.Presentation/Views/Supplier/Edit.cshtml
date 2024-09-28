@@ -1,0 +1,117 @@
+﻿@model EditSupplierModel
+
+@{
+	ViewBag.Title = "Edit Supplier";
+	Layout = "_Layout";
+}
+
+<style>
+	#image {
+		width: 80%;
+		max-width: 250px;
+		height: auto;
+		aspect-ratio: 3 / 4;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	#fileInput {
+		display: none;
+	}
+
+	#openImgUpload {
+		display: block;
+		margin: 20px auto;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+</style>
+
+
+<div class="row row-cards mt-2">
+	<div class="col-1"></div>
+	<div class="col-10 shadow p-3 mb-5 bg-white rounded">
+		<form asp-controller="Supplier" asp-action="Edit" asp-area=""  asp-antiforgery="true" enctype="multipart/form-data">
+			<div class="card-body">
+				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+				<div class="row row-cards">
+					<div class="p-1 m-3 col-md-12 col-sm-12 ">
+						<h3 class="card-title text-center">Edit Supplier</h3>
+					</div>
+					<div class="col-md-1">
+						<div class="mb-3">
+							<img id="image" src="@(Model.PhotoUrl ?? "Default image")" class="" alt="Supplier Picture" />
+							<input type="hidden" asp-for="PhotoUrl" />
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="mb-3">
+							<input asp-for="ImageFile" type="file" id="fileInput" class="form-control">
+							<a href="#" id="openImgUpload">Change Picture</a>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="Name" class="form-label"></label>
+							<input asp-for="Name" class="form-control" placeholder="Supplier Name" required>
+							<span asp-validation-for="Name" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="ContactPerson" class="form-label"></label>
+							<input asp-for="ContactPerson" type="text" class="form-control" placeholder="Contact person name " required>
+							<span asp-validation-for="ContactPerson" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="PhoneNumber" class="form-label"></label>
+							<input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Supplier Phone number" required>
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="Address" class="form-label"></label>
+							<input asp-for="Address" type="text" class="form-control" placeholder="Supplier Address" required>
+							<span asp-validation-for="Address" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer text-center">
+				<button type="submit" class="btn btn-primary">Update Supplier </button>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script>
+	$(document).ready(function () {
+		document.getElementById('openImgUpload').addEventListener('click', function () {
+			document.getElementById('fileInput').click();
+		});
+
+		document.getElementById('fileInput').addEventListener('change', function (event) {
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					document.getElementById('image').src = e.target.result;
+				}
+				reader.readAsDataURL(file);
+			}
+		});
+	});
+	
+</script>
+
+
+

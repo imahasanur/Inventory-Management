@@ -11,5 +11,6 @@ namespace InventoryManagement.Service
 	{
 		ICategoryRepository CategoryRepository { get; }
 		IProductRepository ProductRepository { get; }
+		ISupplierRepository SupplierRepository { get; }
 	}
 }

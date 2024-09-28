@@ -70,15 +70,16 @@
 				method: "POST",
 			},
 			columns: [
-				{ title: "Category Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
-				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
+				{ title: "Id", field: "id", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true },
+				{ title: "Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true },
+				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true },
 				{
 					title: "Created Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
 					formatter: function (cell) {
 						var value = cell.getValue();
 						return luxon.DateTime.fromISO(value).toFormat("dd/MM/yyyy");
 					},
-					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY"
+					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY", headerTooltip: true
 				},
 				{
 					title: "Action", field: "id", headerSort: false, formatter: function (cell, formatterParams) {
@@ -86,7 +87,7 @@
 						return `
 								<button class='btn btn-sm btn-primary' onclick='Edit("${cell.getRow().getIndex()}", event)'><i class="far fa-edit"></i> </button>
 								<button class='btn btn-sm btn-danger' onclick='Delete("${cell.getRow().getIndex()}")'><i class="fas fa-trash"></i> </button>`;
-					}
+					}, headerTooltip: true
 				}
 			],
 		});

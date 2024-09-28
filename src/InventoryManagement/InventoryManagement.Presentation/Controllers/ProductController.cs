@@ -124,7 +124,7 @@ namespace InventoryManagement.Presentation.Controllers
 			if (dto.Filters.Count > 0)
 			{
 				var expression = ExpressionMaker(
-					new List<string> { "photoUrl", "name", "description", "categoryName", "unitPrice","stockLevel", "createdAtUtc", "id" },
+					new List<string> { "id","photoUrl", "name", "description", "categoryName","categoryId","unitPrice","stockLevel", "createdAtUtc", "id" },
 					new List<string>(),
 					dto.Filters
 				);
@@ -180,9 +180,18 @@ namespace InventoryManagement.Presentation.Controllers
 				}
 				else if (filter.Type == FilterHelper.Like)
 				{
-					expression.Append(
-						$"""{fieldInPascalCase}.Contains("{filter.Value}", StringComparison.InvariantCultureIgnoreCase)"""
-					);
+					if (fieldInPascalCase == "Id" || fieldInPascalCase == "CategoryId")
+					{
+						expression.Append(
+							$"""{fieldInPascalCase}.ToString().Contains("{filter.Value}", StringComparison.InvariantCultureIgnoreCase)"""
+						);
+					}
+					else
+					{
+						expression.Append(
+							$"""{fieldInPascalCase}.Contains("{filter.Value}", StringComparison.InvariantCultureIgnoreCase)"""
+						);
+					}
 				}
 				else if (fieldInPascalCase == "CreatedAtUtc")
 				{
