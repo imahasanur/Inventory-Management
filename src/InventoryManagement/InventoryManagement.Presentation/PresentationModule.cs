@@ -12,6 +12,8 @@ namespace InventoryManagement.Presentation
 			builder.RegisterType<CreateCategoryModel>().AsSelf();
 			builder.RegisterType<EditCategoryModel>().AsSelf();
 			builder.RegisterType<DeleteCategoryModel>().AsSelf();
+			builder.RegisterType<CreateProductModel>().AsSelf();
+			builder.RegisterType<EditProductModel>().AsSelf();
 
 		}
 	}

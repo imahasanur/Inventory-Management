@@ -40,8 +40,14 @@ namespace InventoryManagement.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+			builder.Entity<Product>()
+	        .HasOne<Category>()
+	        .WithMany()
+	        .HasForeignKey(x => x.CategoryId);
+
+			base.OnModelCreating(builder);
         }
 		public DbSet<Category> Category { get; set; }
+        public DbSet<Product> Product { get; set; }
 	}
 }

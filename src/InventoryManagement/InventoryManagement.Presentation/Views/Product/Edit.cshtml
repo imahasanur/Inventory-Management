@@ -1,0 +1,149 @@
+﻿@model EditProductModel
+
+@{
+	ViewBag.Title = "Edit Product";
+	Layout = "_Layout";
+}
+
+<style>
+	#image {
+		width: 80%;
+		max-width: 250px;
+		height: auto;
+		aspect-ratio: 3 / 4;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	#fileInput {
+		display: none;
+	}
+
+	#openImgUpload {
+		display: block;
+		margin: 20px auto;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+</style>
+
+
+<div class="row row-cards mt-2">
+	<div class="col-1"></div>
+	<div class="col-10 shadow p-3 mb-5 bg-white rounded">
+		<form asp-controller="Product" asp-action="Edit" asp-area=""  asp-antiforgery="true" enctype="multipart/form-data">
+			<div class="card-body">
+				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+				<div class="row row-cards">
+					<div class="p-1 m-3 col-md-12 col-sm-12 ">
+						<h3 class="card-title text-center">Edit Product</h3>
+					</div>
+					<div class="col-md-1">
+						<div class="mb-3">
+							<img id="image" src="@(Model.PhotoUrl ?? "Default image")" class="" alt="Product Picture" />
+							<input type="hidden" asp-for="PhotoUrl" />
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="mb-3">
+							<input asp-for="ImageFile" type="file" id="fileInput" class="form-control">
+							<a href="#" id="openImgUpload">Change Profile Picture</a>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="Name" class="form-label"></label>
+							<input asp-for="Name" class="form-control" placeholder="Product Name" required>
+							<span asp-validation-for="Name" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="Description" class="form-label"></label>
+							<input asp-for="Description" type="text" class="form-control" placeholder="Product Description" required>
+							<span asp-validation-for="Description" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="StockLevel" class="form-label"></label>
+							<input asp-for="StockLevel" type="number" class="form-control" placeholder="Product Stock Level" required>
+							<span asp-validation-for="StockLevel" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="UnitPrice" class="form-label"></label>
+							<input asp-for="UnitPrice" type="number" class="form-control" placeholder="Product UnitPrice" required>
+							<span asp-validation-for="UnitPrice" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="mb-3">
+							<label asp-for="CategoryId" class="form-label">Category</label>
+							<select id="categoryDropdown" class="form-control" asp-for="CategoryId">
+								<option value="">-- Select Category --</option>
+								@foreach (var category in Model.Categories)
+								{
+									<option value="@category.Id" data-category-name="@category.Name">@category.Name</option>
+								}
+							</select>
+							<span asp-validation-for="CategoryId" class="text-danger"></span>
+						</div>
+					</div>
+
+					<input type="hidden" asp-for="CategoryId" id="CategoryId" />
+					<input type="hidden" asp-for="CategoryName" id="CategoryName" />
+
+				</div>
+			</div>
+			<div class="card-footer text-center">
+				<button type="submit" class="btn btn-primary">Update Product </button>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script>
+	$(document).ready(function () {
+		document.getElementById('openImgUpload').addEventListener('click', function () {
+			document.getElementById('fileInput').click();
+		});
+
+		document.getElementById('fileInput').addEventListener('change', function (event) {
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					document.getElementById('image').src = e.target.result;
+				}
+				reader.readAsDataURL(file);
+			}
+		});
+	});
+	
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const categoryDropdown = document.getElementById('categoryDropdown');
+		const categoryNameInput = document.getElementById('CategoryName');
+
+		// Listen for change events on the dropdown
+		categoryDropdown.addEventListener('change', function () {
+			const selectedOption = categoryDropdown.options[categoryDropdown.selectedIndex];
+
+			// Set the CategoryName input to the selected option's data-category-name attribute
+			const categoryName = selectedOption.getAttribute('data-category-name');
+			categoryNameInput.value = categoryName;
+		});
+	});
+</script>
+
+

@@ -13,6 +13,7 @@ namespace InventoryManagement.Service
 		protected override void Load(ContainerBuilder builder)
 		{
 			builder.RegisterType<CategoryManagementService>().As<ICategoryManagementService>().InstancePerLifetimeScope();
+			builder.RegisterType<ProductManagementService>().As<IProductManagementService>().InstancePerLifetimeScope();
 		}
 	}
 }

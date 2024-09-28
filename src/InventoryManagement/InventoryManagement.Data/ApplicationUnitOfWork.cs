@@ -11,11 +11,15 @@ namespace InventoryManagement.Data
 {
     public class ApplicationUnitOfWork : UnitOfWork, IApplicationUnitOfWork
     {
+		public IProductRepository ProductRepository { get; private set; }
 		public ICategoryRepository CategoryRepository { get; private set; }
 		public ApplicationUnitOfWork(ICategoryRepository categoryRepository,
+            IProductRepository productRepository,
             IApplicationDbContext dbContext) : base((DbContext)dbContext)
         {
             CategoryRepository = categoryRepository;
-        }
+            ProductRepository = productRepository;
+
+		}
     }
 }

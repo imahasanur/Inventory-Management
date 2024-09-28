@@ -15,5 +15,6 @@ namespace InventoryManagement.Service.Services
 		Task DeleteCategoryByIdAsync(Guid id);
 		Task<Category> GetCategoryByIdAsync(Guid id);
 		Task EditCategoryAsync(EditCategoryDto dto);
+		Task<IList<CategoriesDto>> GetAllCategoryAsync();
 	}
 }

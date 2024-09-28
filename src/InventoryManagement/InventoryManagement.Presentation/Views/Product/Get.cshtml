@@ -1,0 +1,165 @@
+﻿@model ProductsModel
+@{
+	ViewBag.Title = "All Product";
+	Layout = "_Layout";
+}
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/tabulator/dist/css/tabulator_bootstrap5.min.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+}
+
+<div class="card p-2 m-2">
+	<div class="card-body text-center shadow p-3 mb-5 bg-white rounded">
+		<div style="margin-bottom:50px;">
+			<h3 class="card-title ">Products Table </h3>
+		</div>
+		<div id="main-table" class="shadow-sm p-2 mt-2 mb-3 bg-white rounded"></div>
+	</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/tabulator/dist/js/tabulator.min.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+
+		var singleDateEditor = function (cell, onRendered, success, cancel, editorParams) {
+			var editor = document.createElement("input");
+			editor.setAttribute("type", "text");
+			editor.style.cssText = "width:100%; height:100%;";
+			onRendered(function () {
+				flatpickr(editor, {
+					enableTime: true,
+					dateFormat: "d/m/Y",
+					onClose: function (selectedDates, dateStr, instance) {
+						if (selectedDates.length) {
+							success(dateStr);
+						} else {
+							cancel();
+						}
+					}
+				});
+				editor.focus();
+			});
+			return editor;
+		};
+
+		var currentPage = 1;
+		var currentPageSize = 5;
+
+		var table = new Tabulator("#main-table", {
+			pagination: true,
+			paginationCounter: "rows",
+			paginationMode: "remote",
+			filterMode: "remote",
+			sortMode: "remote",
+			paginationSize: currentPageSize,
+			paginationSizeSelector: [5, 10, 15, 20],
+			height: 500,
+			layout: "fitColumns",
+			ajaxURL: "@Model.EndpointUrl",
+			ajaxContentType: "json",
+			ajaxConfig: {
+				method: "POST",
+			},
+			columns: [
+				{
+					title: "Product Photo", field: "photoUrl", headerSort: false,
+					formatter: function (cell, formatterParams) {
+						var url = cell.getValue();
+						return `<img src="${url}" alt="Product Picture" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">`;
+					}
+				},
+				{ title: "Product Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
+				{ title: "Description", field: "description", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
+				{ title: "Category", field: "categoryName", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea" },
+				{ title: "Stock Level", field: "stockLevel", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea" },
+				{ title: "Unit Price", field: "unitPrice", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea" },
+				{
+					title: "Created Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
+					formatter: function (cell) {
+						var value = cell.getValue();
+						return luxon.DateTime.fromISO(value).toFormat("dd/MM/yyyy");
+					},
+					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY"
+				},
+				{
+					title: "Action", field: "id", headerSort: false, formatter: function (cell, formatterParams) {
+						var obj = cell.getRow().getData();
+						return `
+								<button class='btn btn-sm btn-primary' onclick='Edit("${cell.getRow().getIndex()}", event)'><i class="far fa-edit"></i> </button>
+								<button class='btn btn-sm btn-danger' onclick='Delete("${cell.getRow().getIndex()}")'><i class="fas fa-trash"></i> </button>`;
+					}
+				}
+			],
+		});
+
+	});
+</script>
+
+<script>
+	function Delete(rowId) {
+		var table = Tabulator.findTable("#main-table")[0];
+		var rowData = table.getRow(rowId).getData();
+
+		Swal.fire({
+			title: 'Delete Product?',
+			text: `Are you sure you want to delete product: ${rowData.name} (ID: ${rowData.id})?`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Delete!',
+			cancelButtonText: 'Cancel'
+		}).then((result) => {
+			if (result.isConfirmed) {
+
+				$.ajax({
+					url: '@Url.Action("Delete", "Product")',
+					type: 'POST',
+					data: { id: rowData.id },
+					success: function (response) {
+						if (response.success) {
+							Swal.fire('Deleted!', 'Product record has been deleted.', 'success');
+							table.deleteRow(rowId);
+						} else {
+							Swal.fire('Error!', 'There was a problem deleting the product.', 'error');
+						}
+					},
+					error: function () {
+						Swal.fire('Error!', 'Unable to delete product.', 'error');
+					}
+				});
+			} else if (result.dismiss === Swal.DismissReason.cancel) {
+				Swal.fire('Cancelled', 'The product is kept :)', 'info');
+			}
+		});
+	}
+
+	var isEditInProgress = false;
+
+	function Edit(rowId, event) {
+		if (isEditInProgress) {
+			return;
+		}
+		isEditInProgress = true;
+		var button = event.currentTarget;
+		button.disabled = true;
+
+		event.stopPropagation();
+		event.preventDefault();
+
+		var table = Tabulator.findTable("#main-table")[0];
+		var rowData = table.getRow(rowId).getData();
+		setTimeout(function () {
+			window.location.href = '@Url.Action("Edit", "Product")/' + rowData.id;
+		}, 1000);
+	}
+
+</script>

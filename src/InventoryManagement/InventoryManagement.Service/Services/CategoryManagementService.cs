@@ -26,6 +26,13 @@ namespace InventoryManagement.Service.Services
 			return (result, categoryEntityList.total, categoryEntityList.totalDisplay);
 		}
 
+		public async Task<IList<CategoriesDto>> GetAllCategoryAsync()
+		{
+			var categoryEntityList = await _unitOfWork.CategoryRepository.GetAllCategoryAsync();
+			var result = await categoryEntityList.BuildAdapter().AdaptToTypeAsync<List<CategoriesDto>>();
+			return result;
+		}
+		
 		public async Task CreateCategoryAsync(CreateCategoryDto dto)
 		{
 			//var employee = await dto.BuildAdapter().AdaptToTypeAsync<Category>();

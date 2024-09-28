@@ -7,3 +7,5 @@
 # Logs
 logs
 *.log
+# Ignore specific images folder
+/src/InventoryManagement/InventoryManagement.Presentation/wwwroot/uploads/

@@ -15,5 +15,6 @@ namespace InventoryManagement.Service.Domain.Repositories
 		Task<Category> GetCategoryByIdAsync(Guid id);
 		Task EditCategoryAsync(Category categoryEntityObj);
 		Task DeleteCategoryByIdAsync(Guid id);
+		Task<IList<Category>> GetAllCategoryAsync();
 	}
 }

@@ -24,6 +24,12 @@ namespace InventoryManagement.Data.Repositories
 			return await GetDynamicAsync(null, null, null, pageIndex, pageSize, true);
 		}
 
+		public async Task<IList<Category>> GetAllCategoryAsync()
+		{
+			return await GetAsync(null, null, null, true);
+		}
+		
+
 		public async Task CreateCategoryAsync(CreateCategoryDto dto)
 		{
 			var category = await dto.BuildAdapter().AdaptToTypeAsync<Category>();
