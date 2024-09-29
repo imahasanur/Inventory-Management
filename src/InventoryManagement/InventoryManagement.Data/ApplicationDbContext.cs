@@ -45,10 +45,27 @@ namespace InventoryManagement.Data
 	        .WithMany()
 	        .HasForeignKey(x => x.CategoryId);
 
-			base.OnModelCreating(builder);
+            builder.Entity<PurchaseOrder>()
+            .HasOne<Product>()
+            .WithMany()
+            .HasForeignKey(x => x.ProductId);
+
+            builder.Entity<PurchaseOrder>()
+            .HasOne<Supplier>()
+            .WithMany()
+            .HasForeignKey(x => x.SupplierId);
+
+            builder.Entity<Transaction>()
+            .HasOne<Product>()
+            .WithMany()
+            .HasForeignKey(x => x.ProductId);
+
+            base.OnModelCreating(builder);
         }
 		public DbSet<Category> Category { get; set; }
         public DbSet<Product> Product { get; set; }
 		public DbSet<Supplier> Supplier { get; set; }
-	}
+        public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+    }
 }

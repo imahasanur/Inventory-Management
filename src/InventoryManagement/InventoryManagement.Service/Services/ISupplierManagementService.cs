@@ -10,9 +10,11 @@ namespace InventoryManagement.Service.Services
 {
 	public interface ISupplierManagementService
 	{
-		Task CreateSupplierAsync(CreateSupplierDto dto);
+        
+        Task CreateSupplierAsync(CreateSupplierDto dto);
 		Task<(IList<SuppliersDto> data, int total, int totalDisplay)> GetSuppliersAsync(int pageIndex, int pageSize);
-		Task DeleteByIdAsync(Guid id);
+        Task<IList<SuppliersDto>> GetAllSupplierAsync();
+        Task DeleteByIdAsync(Guid id);
 		Task<Supplier> GetSupplierByIdAsync(Guid id);
 		Task EditSupplierAsync(EditSupplierDto dto);
 	}

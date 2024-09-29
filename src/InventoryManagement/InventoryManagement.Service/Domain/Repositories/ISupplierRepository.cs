@@ -11,7 +11,8 @@ namespace InventoryManagement.Service.Domain.Repositories
 	public interface ISupplierRepository : IRepositoryBase<Supplier,Guid>
 	{
 		Task<(IList<Supplier> data, int total, int totalDisplay)> GetSuppliersAsync(int pageIndex, int pageSize);
-		Task CreateSupplierAsync(CreateSupplierDto dto);
+		Task<IList<Supplier>> GetAllSupplierAsync();
+        Task CreateSupplierAsync(CreateSupplierDto dto);
 		Task<Supplier> GetSupplierByIdAsync(Guid id);
 		Task EditSupplierAsync(Supplier entityObj);
 		Task DeleteByIdAsync(Guid id);

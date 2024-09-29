@@ -4,6 +4,7 @@ using InventoryManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Presentation.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240928124406_AddedPurchaseOrderTalbe")]
+    partial class AddedPurchaseOrderTalbe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -389,44 +392,6 @@ namespace InventoryManagement.Presentation.Data.Migrations
                     b.ToTable("Supplier");
                 });
 
-            modelBuilder.Entity("InventoryManagement.Service.Domain.Entities.Transaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PurchaseOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("SaleOrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TotalAmount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransactionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Transaction");
-                });
-
             modelBuilder.Entity("InventoryManagement.Data.Membership.ApplicationRoleClaim", b =>
                 {
                     b.HasOne("InventoryManagement.Data.Membership.ApplicationRole", null)
@@ -498,15 +463,6 @@ namespace InventoryManagement.Presentation.Data.Migrations
                     b.HasOne("InventoryManagement.Service.Domain.Entities.Supplier", null)
                         .WithMany()
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("InventoryManagement.Service.Domain.Entities.Transaction", b =>
-                {
-                    b.HasOne("InventoryManagement.Service.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

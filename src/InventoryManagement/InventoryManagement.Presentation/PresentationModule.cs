@@ -16,7 +16,11 @@ namespace InventoryManagement.Presentation
 			builder.RegisterType<EditProductModel>().AsSelf();
 			builder.RegisterType<CreateSupplierModel>().AsSelf();
 			builder.RegisterType<EditSupplierModel>().AsSelf();
+            builder.RegisterType<CreatePurchaseOrderModel>().AsSelf();
+            builder.RegisterType<EditPurchaseOrderModel>().AsSelf();
+			builder.RegisterType<CreateTransactionModel>().AsSelf();
+
 
 		}
-	}
+    }
 }

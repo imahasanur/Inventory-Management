@@ -12,7 +12,8 @@ namespace InventoryManagement.Service.Services
 	{
 		Task CreateProductAsync(CreateProductDto dto);
 		Task<(IList<ProductsDto> data, int total, int totalDisplay)> GetProductsAsync(int pageIndex, int pageSize);
-		Task DeleteByIdAsync(Guid id);
+		Task<IList<ProductsDto>> GetAllProductAsync();
+        Task DeleteByIdAsync(Guid id);
 		Task<Product> GetProductByIdAsync(Guid id);
 		Task EditProductAsync(EditProductDto dto);
 	}

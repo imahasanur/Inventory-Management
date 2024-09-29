@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Service.Dto
 {
-	public class CreateCategoryDto
+	public record CreateCategoryDto
 	{
 		public required string Name { get; set; }
 		public required string Description { get; set; }

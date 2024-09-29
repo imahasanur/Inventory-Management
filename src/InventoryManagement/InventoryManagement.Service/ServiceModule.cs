@@ -15,6 +15,9 @@ namespace InventoryManagement.Service
 			builder.RegisterType<CategoryManagementService>().As<ICategoryManagementService>().InstancePerLifetimeScope();
 			builder.RegisterType<ProductManagementService>().As<IProductManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<SupplierManagementService>().As<ISupplierManagementService>().InstancePerLifetimeScope();
-        }
+            builder.RegisterType<PurchaseManagementService>().As<IPurchaseManagementService>().InstancePerLifetimeScope();
+			builder.RegisterType<TransactionManagementService>().As<ITransactionManagementService>().InstancePerLifetimeScope();
+
+		}
 	}
 }

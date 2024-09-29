@@ -26,7 +26,14 @@ namespace InventoryManagement.Service.Services
 			return (result, productEntityList.total, productEntityList.totalDisplay);
 		}
 
-		public async Task CreateProductAsync(CreateProductDto dto)
+        public async Task<IList<ProductsDto>> GetAllProductAsync()
+        {
+            var productEntityList = await _unitOfWork.ProductRepository.GetAllProductAsync();
+            var result = await productEntityList.BuildAdapter().AdaptToTypeAsync<List<ProductsDto>>();
+            return result;
+        }
+        
+        public async Task CreateProductAsync(CreateProductDto dto)
 		{
 			await _unitOfWork.ProductRepository.CreateProductAsync(dto);
 			await _unitOfWork.SaveAsync();

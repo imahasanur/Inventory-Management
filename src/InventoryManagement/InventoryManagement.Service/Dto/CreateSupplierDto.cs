@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Service.Dto
 {
-	public class CreateSupplierDto
+	public record CreateSupplierDto
 	{
 		public string? PhotoUrl { get; set; }
 		public required string Name { get; set; }

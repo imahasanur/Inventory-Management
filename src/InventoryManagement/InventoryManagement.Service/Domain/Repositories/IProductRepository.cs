@@ -11,7 +11,8 @@ namespace InventoryManagement.Service.Domain.Repositories
 	public interface IProductRepository:IRepositoryBase<Product,Guid>
 	{
 		Task<(IList<Product> data, int total, int totalDisplay)> GetProductsAsync(int pageIndex, int pageSize);
-		Task CreateProductAsync(CreateProductDto dto);
+		Task<IList<Product>> GetAllProductAsync();
+        Task CreateProductAsync(CreateProductDto dto);
 		Task<Product> GetProductByIdAsync(Guid id);
 		Task EditProductAsync(Product entityObj);
 		Task DeleteByIdAsync(Guid id);

@@ -1,6 +1,6 @@
-﻿@model SuppliersModel
+﻿@model TransactionsModel
 @{
-	ViewBag.Title = "All Supplier";
+	ViewBag.Title = "All Transaction";
 	Layout = "_Layout";
 }
 
@@ -14,7 +14,7 @@
 <div class="card p-2 m-2">
 	<div class="card-body text-center shadow p-3 mb-5 bg-white rounded">
 		<div style="margin-bottom:50px;">
-			<h3 class="card-title ">Suppliers Table </h3>
+			<h3 class="card-title ">Transactions Table </h3>
 		</div>
 		<div id="main-table" class="shadow-sm p-2 mt-2 mb-3 bg-white rounded"></div>
 	</div>
@@ -71,31 +71,25 @@
 				method: "POST",
 			},
 			columns: [
-				{ title: "Id", field: "id", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Transaction Id", field: "id", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Product Id", field: "productId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Purchase Id", field: "purchaseOrderId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Sale Id", field: "saleOrderId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Quantity", field: "quantity", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Total Price", field: "totalAmount", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
 				{
-					title: "Supplier Photo", field: "photoUrl", headerSort: false,
-					formatter: function (cell, formatterParams) {
-						var url = cell.getValue();
-						return `<img src="${url}" alt="Supplier Picture" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">`;
-					}, width: 150, headerTooltip: true
-				},
-				{ title: "Supplier Name", field: "name", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Contact Person", field: "contactPerson", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Address", field: "address", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{ title: "Contact Number", field: "phoneNumber", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
-				{
-					title: "Created Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
+					title: "Transaction Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
 					formatter: function (cell) {
 						var value = cell.getValue();
 						return luxon.DateTime.fromISO(value).toFormat("dd/MM/yyyy");
 					},
-					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY", width: 150
+					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY", width: 200, headerTooltip: true
 				},
+				{ title: "Transaction Type", field: "transactionType", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 200 },
 				{
 					title: "Action", field: "id", headerSort: false, formatter: function (cell, formatterParams) {
 						var obj = cell.getRow().getData();
 						return `
-								<button class='btn btn-sm btn-primary' onclick='Edit("${cell.getRow().getIndex()}", event)'><i class="far fa-edit"></i> </button>
 								<button class='btn btn-sm btn-danger' onclick='Delete("${cell.getRow().getIndex()}")'><i class="fas fa-trash"></i> </button>`;
 					}, width: 150
 				}
@@ -111,8 +105,8 @@
 		var rowData = table.getRow(rowId).getData();
 
 		Swal.fire({
-			title: 'Delete Product?',
-			text: `Are you sure you want to delete Supplier: ${rowData.name} (ID: ${rowData.id})?`,
+			title: 'Delete Transaction?',
+			text: `Are you sure you want to delete transaction record: (ID: ${rowData.id})?`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonText: 'Delete!',
@@ -121,45 +115,25 @@
 			if (result.isConfirmed) {
 
 				$.ajax({
-					url: '@Url.Action("Delete", "Supplier")',
+					url: '@Url.Action("Delete", "Transaction")',
 					type: 'POST',
 					data: { id: rowData.id },
 					success: function (response) {
 						if (response.success) {
-							Swal.fire('Deleted!', 'Supplier record has been deleted.', 'success');
+							Swal.fire('Deleted!', 'Transaction record has been deleted.', 'success');
 							table.deleteRow(rowId);
 						} else {
-							Swal.fire('Error!', 'There was a problem deleting the supplier.', 'error');
+							Swal.fire('Error!', 'There was a problem deleting the transaction.', 'error');
 						}
 					},
 					error: function () {
-						Swal.fire('Error!', 'Unable to delete supplier.', 'error');
+						Swal.fire('Error!', 'Unable to delete transaction.', 'error');
 					}
 				});
 			} else if (result.dismiss === Swal.DismissReason.cancel) {
-				Swal.fire('Cancelled', 'The supplier is kept :)', 'info');
+				Swal.fire('Cancelled', 'The transaction is kept :)', 'info');
 			}
 		});
-	}
-
-	var isEditInProgress = false;
-
-	function Edit(rowId, event) {
-		if (isEditInProgress) {
-			return;
-		}
-		isEditInProgress = true;
-		var button = event.currentTarget;
-		button.disabled = true;
-
-		event.stopPropagation();
-		event.preventDefault();
-
-		var table = Tabulator.findTable("#main-table")[0];
-		var rowData = table.getRow(rowId).getData();
-		setTimeout(function () {
-			window.location.href = '@Url.Action("Edit", "Supplier")/' + rowData.id;
-		}, 1000);
 	}
 
 </script>

@@ -24,7 +24,12 @@ namespace InventoryManagement.Data.Repositories
 			return await GetDynamicAsync(null, null, null, pageIndex, pageSize, true);
 		}
 
-		public async Task CreateSupplierAsync(CreateSupplierDto dto)
+        public async Task<IList<Supplier>> GetAllSupplierAsync()
+        {
+            return await GetAsync(null, null, null, true);
+        }
+        
+        public async Task CreateSupplierAsync(CreateSupplierDto dto)
 		{
 			var supplier = await dto.BuildAdapter().AdaptToTypeAsync<Supplier>();
 			await AddAsync(supplier);

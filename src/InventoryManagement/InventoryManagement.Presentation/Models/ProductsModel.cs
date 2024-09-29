@@ -30,9 +30,9 @@ namespace InventoryManagement.Presentation.Models
 			return await _productManagementService.GetProductsAsync(pageIndex,pageSize);
 		}
 
-		//public async Task<IList<CategoriesDto>> GetAllCategoryAsync()
-		//{
-		//	return await _productManagementService.GetAllCategoryAsync();
-		//}
+		public async Task<IList<ProductsDto>> GetAllProductAsync()
+		{
+			return await _productManagementService.GetAllProductAsync();
+		}
 	}
 }

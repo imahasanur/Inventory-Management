@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Service.Dto
 {
-	public record CreateProductDto
-	{
+	public record PurchaseOrderDto
+    {
 		public string? PhotoUrl { get; set; }
 		public required string Name { get; set; }
 		public required string Description { get; set; }

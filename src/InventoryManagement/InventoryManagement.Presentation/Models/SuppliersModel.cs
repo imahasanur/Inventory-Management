@@ -30,5 +30,11 @@ namespace InventoryManagement.Presentation.Models
 			return await _supplierManagementService.GetSuppliersAsync(pageIndex,pageSize);
 		}
 
-	}
+        public async Task<IList<SuppliersDto>> GetAllSupplierAsync()
+        {
+            return await _supplierManagementService.GetAllSupplierAsync();
+        }
+        
+
+    }
 }
