@@ -15,5 +15,6 @@ namespace InventoryManagement.Data
 		public DbSet<Supplier> Supplier { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<SaleOrder> SaleOrder { get; set; }
     }
 }

@@ -40,6 +40,7 @@ namespace InventoryManagement.Data
 			builder.RegisterType<SupplierRepository>().As<ISupplierRepository>().InstancePerLifetimeScope();
             builder.RegisterType<PurchaseOrderRepository>().As<IPurchaseOrderRepository>().InstancePerLifetimeScope();
 			builder.RegisterType<TransactionRepository>().As<ITransactionRepository>().InstancePerLifetimeScope();
+			builder.RegisterType<SaleOrderRepository>().As<ISaleOrderRepository>().InstancePerLifetimeScope();
 			//base.Load(builder);
 		}
     }

@@ -14,5 +14,6 @@ namespace InventoryManagement.Service
 		ISupplierRepository SupplierRepository { get; }
         IPurchaseOrderRepository PurchaseOrderRepository { get; }
 		ITransactionRepository TransactionRepository { get; }
+		ISaleOrderRepository SaleOrderRepository { get; }
 	}
 }

@@ -17,11 +17,14 @@ namespace InventoryManagement.Data
 		public ISupplierRepository SupplierRepository { get; private set; }
 		public IPurchaseOrderRepository PurchaseOrderRepository { get; private set; }
         public ITransactionRepository TransactionRepository { get; private set; }
-        public ApplicationUnitOfWork(ICategoryRepository categoryRepository,
+		public ISaleOrderRepository SaleOrderRepository { get; private set; }
+
+		public ApplicationUnitOfWork(ICategoryRepository categoryRepository,
             IProductRepository productRepository,
 			ISupplierRepository supplierRepository,
             IPurchaseOrderRepository purchaseOrderRepository,
 			ITransactionRepository transactionRepository,
+			ISaleOrderRepository saleOrderRepository,
 			IApplicationDbContext dbContext) : base((DbContext)dbContext)
         {
             CategoryRepository = categoryRepository;
@@ -29,6 +32,7 @@ namespace InventoryManagement.Data
 			SupplierRepository = supplierRepository;
             PurchaseOrderRepository = purchaseOrderRepository;
             TransactionRepository = transactionRepository;
+			SaleOrderRepository = saleOrderRepository;
 
 		}
     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Service.Dto
 {
-	public record EditPurchaseOrderDto
-    {
+	public record EditSaleOrderDto
+	{
 		public required Guid Id { get; init; }
         public required Guid ProductId { get; set; }
         public required string ProductName { get; set; }
