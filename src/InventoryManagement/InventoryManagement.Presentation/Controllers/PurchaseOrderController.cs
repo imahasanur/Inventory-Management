@@ -9,9 +9,11 @@ using System.Text;
 using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagement.Presentation.Controllers
 {
+    [Authorize]
     public class PurchaseOrderController : Controller
     {
         private readonly ILifetimeScope _scope;
@@ -25,6 +27,8 @@ namespace InventoryManagement.Presentation.Controllers
             _logger = logger;
             _linkGenerator = linkGenerator;
         }
+
+        [Authorize(Policy = "UserPolicy")]
         public async Task<IActionResult> Create()
         {
             var model = new CreatePurchaseOrderModel();
@@ -42,7 +46,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(model);
         }
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CreatePurchaseOrderModel model)
 		{
 			if (!ModelState.IsValid)
@@ -61,7 +66,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return RedirectToAction("Create");
 		}
 
-		public async Task<IActionResult> Get()
+        [Authorize(Policy = "UserPolicy")]
+        public async Task<IActionResult> Get()
 		{
 			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "PurchaseOrder", action: "Get");
 			if (url is null)
@@ -72,7 +78,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(viewModel);
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Get([FromBody] TabulatorQueryDto dto)
 		{
 			var model = new PurchaseOrdersModel();
@@ -176,7 +183,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return expression.ToString();
 		}
 
-		public async Task<IActionResult> Edit(Guid id)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> Edit(Guid id)
 		{
 			if (id == Guid.Empty)
 			{
@@ -204,7 +212,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(model);
 		}
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(EditPurchaseOrderModel model)
 		{
 			if (!ModelState.IsValid)
@@ -271,7 +280,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return RedirectToAction("Get");
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			try

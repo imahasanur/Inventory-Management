@@ -9,9 +9,11 @@ using System.Text;
 using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagement.Presentation.Controllers
 {
+    [Authorize]
     public class TransactionController : Controller
     {
         private readonly ILifetimeScope _scope;
@@ -27,7 +29,8 @@ namespace InventoryManagement.Presentation.Controllers
             _linkGenerator = linkGenerator;
         }
 
-		public async Task<IActionResult> Get()
+        [Authorize(Policy = "UserPolicy")]
+        public async Task<IActionResult> Get()
 		{
 			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Transaction", action: "Get");
 			if (url is null)
@@ -38,7 +41,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(viewModel);
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Get([FromBody] TabulatorQueryDto dto)
 		{
 			var model = new TransactionsModel();
@@ -54,7 +58,7 @@ namespace InventoryManagement.Presentation.Controllers
 			if (dto.Filters.Count > 0)
 			{
 				var expression = ExpressionMaker(
-					new List<string> { "id","productId", "purchaseOrderId", "saleOrderId", "quantity","totalAmount","transactionType","id" },
+					new List<string> { "id","productId", "purchaseOrderId", "saleOrderId", "quantity","totalAmount","transactionType","createdAtUtc","id" },
 					new List<string>(),
 					dto.Filters
 				);
@@ -142,7 +146,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return expression.ToString();
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			try

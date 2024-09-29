@@ -8,9 +8,11 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using Humanizer;
 using InventoryManagement.Presentation.Others;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagement.Presentation.Controllers
 {
+	[Authorize]
     public class CategoryController : Controller
     {
         private readonly ILifetimeScope _scope;
@@ -25,6 +27,8 @@ namespace InventoryManagement.Presentation.Controllers
             _logger = logger;
             _linkGenerator = linkGenerator;
         }
+
+        [Authorize(Policy = "AdminPolicy")]
         public IActionResult Create()
         {
             var model = new CreateCategoryModel();
@@ -32,7 +36,8 @@ namespace InventoryManagement.Presentation.Controllers
             return View(model);
         }
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CreateCategoryModel model)
 		{
 			if (!ModelState.IsValid)
@@ -48,7 +53,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return RedirectToAction("Create");
 		}
 
-		public async Task<IActionResult> Get()
+        [Authorize(Policy = "UserPolicy")]
+        public async Task<IActionResult> Get()
 		{
 			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Category", action: "Get");
 			if (url is null)
@@ -59,7 +65,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(viewModel);
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Get([FromBody] TabulatorQueryDto dto)
 		{
 			var model = new CategoriesModel();
@@ -163,7 +170,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return expression.ToString();
 		}
 
-		public async Task<IActionResult> Edit(Guid id)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> Edit(Guid id)
 		{
 			if (id == Guid.Empty)
 			{
@@ -181,7 +189,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(model);
 		}
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(EditCategoryModel model)
 		{
 			if (!ModelState.IsValid)
@@ -200,7 +209,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return RedirectToAction("Get");
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			try

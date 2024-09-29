@@ -10,9 +10,11 @@ using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
 using InventoryManagement.Data.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagement.Presentation.Controllers
 {
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly ILifetimeScope _scope;
@@ -124,7 +126,7 @@ namespace InventoryManagement.Presentation.Controllers
             if (dto.Filters.Count > 0)
             {
                 var expression = ExpressionMaker(
-                    new List<string> { "id", "productId", "saleOrderId", "quantity", "totalAmount", "transactionType" },
+                    new List<string> { "id", "productId", "saleOrderId", "quantity", "totalAmount", "transactionType", "createdAtUtc" },
                     new List<string>(),
                     dto.Filters
                 );
@@ -197,7 +199,7 @@ namespace InventoryManagement.Presentation.Controllers
 			if (dto.Filters.Count > 0)
 			{
 				var expression = ExpressionMaker(
-					new List<string> { "id", "productId", "purchaseOrderId", "quantity", "totalAmount", "transactionType" },
+					new List<string> { "id", "productId", "purchaseOrderId", "quantity", "totalAmount", "transactionType", "createdAtUtc" },
 					new List<string>(),
 					dto.Filters
 				);

@@ -9,9 +9,11 @@ using System.Text;
 using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagement.Presentation.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ILifetimeScope _scope;
@@ -26,6 +28,8 @@ namespace InventoryManagement.Presentation.Controllers
             _logger = logger;
             _linkGenerator = linkGenerator;
         }
+
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Create()
         {
             var model = new CreateProductModel();
@@ -38,7 +42,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(model);
         }
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CreateProductModel model)
 		{
 			if (!ModelState.IsValid)
@@ -64,9 +69,9 @@ namespace InventoryManagement.Presentation.Controllers
 				}
 
 				model.PhotoUrl = $"/uploads/{uniqueFileName}";
-				model.CreatedAtUtc = DateTime.UtcNow;
 			}
-			var productDto = await model.BuildAdapter().AdaptToTypeAsync<CreateProductDto>();
+            model.CreatedAtUtc = DateTime.UtcNow;
+            var productDto = await model.BuildAdapter().AdaptToTypeAsync<CreateProductDto>();
 			model.Resolve(_scope);
 			await model.CreateProductAsync(productDto);
 
@@ -97,7 +102,9 @@ namespace InventoryManagement.Presentation.Controllers
 
 			return destImage;
 		}
-		public async Task<IActionResult> Get()
+
+        [Authorize(Policy = "UserPolicy")]
+        public async Task<IActionResult> Get()
 		{
 			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Product", action: "Get");
 			if (url is null)
@@ -108,7 +115,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(viewModel);
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "UserPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Get([FromBody] TabulatorQueryDto dto)
 		{
 			var model = new ProductsModel();
@@ -212,7 +220,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return expression.ToString();
 		}
 
-		public async Task<IActionResult> Edit(Guid id)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> Edit(Guid id)
 		{
 			if (id == Guid.Empty)
 			{
@@ -233,7 +242,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return View(model);
 		}
 
-		[HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost, ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(EditProductModel model)
 		{
 			if (!ModelState.IsValid)
@@ -271,7 +281,8 @@ namespace InventoryManagement.Presentation.Controllers
 			return RedirectToAction("Get");
 		}
 
-		[HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			try
