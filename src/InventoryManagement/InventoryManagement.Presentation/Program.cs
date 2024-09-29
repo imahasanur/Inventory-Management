@@ -73,7 +73,16 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddCookieAuthentication();
 
-    builder.Services.AddSession(options =>
+	builder.Services.AddAuthorization(options =>
+	{
+		options.AddPolicy("AdminPolicy", policy =>
+			policy.RequireClaim("role", "admin"));
+
+		options.AddPolicy("UserPolicy", policy =>
+			policy.RequireClaim("role", "user"));
+	});
+
+	builder.Services.AddSession(options =>
     {
         options.IdleTimeout = TimeSpan.FromMinutes(30);
         options.Cookie.HttpOnly = true;

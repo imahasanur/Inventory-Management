@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using InventoryManagement.Data;
 using InventoryManagement.Data.Membership;
 using InventoryManagement.Service.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace InventoryManagement.Data
 {
@@ -65,7 +66,48 @@ namespace InventoryManagement.Data
             .WithMany()
             .HasForeignKey(x => x.ProductId);
 
-            base.OnModelCreating(builder);
+			//seed an admin
+			var adminUserId = Guid.NewGuid();
+			var passwordHasher = new PasswordHasher<ApplicationUser>();
+			var adminUser = new ApplicationUser
+			{
+				Id = adminUserId,
+				UserName = "admin@gmail.com",
+				NormalizedUserName = "ADMIN@GMAIL.COM",
+				Email = "admin@gmail.com",
+				NormalizedEmail = "ADMIN@GMAIL.COM",
+				EmailConfirmed = true,
+				SecurityStamp = string.Empty,
+				FirstName = "Admin",
+				LastName = "User",
+				FullName = "Admin User",
+				CreatedAtUtc = DateTime.UtcNow
+			};
+
+			// Hash the password "1234567"
+			adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "1234567");
+
+			builder.Entity<ApplicationUser>().HasData(adminUser);
+
+			// Seed claims for the admin user
+			builder.Entity<ApplicationUserClaim>().HasData(
+				new ApplicationUserClaim
+				{
+					Id = 1,
+					UserId = adminUserId,
+					ClaimType = "role",
+					ClaimValue = "admin"
+				},
+				new ApplicationUserClaim
+				{
+					Id = 2,
+					UserId = adminUserId,
+					ClaimType = "role",
+					ClaimValue = "user"
+				}
+			);
+
+			base.OnModelCreating(builder);
         }
 		public DbSet<Category> Category { get; set; }
         public DbSet<Product> Product { get; set; }

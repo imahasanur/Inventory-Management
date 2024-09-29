@@ -1,0 +1,94 @@
+﻿@model ReportModel
+@{
+	ViewBag.Title = "Purchases Report";
+	Layout = "_Layout";
+}
+
+@section Styles {
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/tabulator/dist/css/tabulator_bootstrap5.min.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+}
+
+<div class="card p-2 m-2">
+	<div class="card-body text-center shadow p-3 mb-5 bg-white rounded">
+		<div style="margin-bottom:50px;">
+			<h3 class="card-title ">Purchases Report </h3>
+		</div>
+		<div id="main-table" class="shadow-sm p-2 mt-2 mb-3 bg-white rounded"></div>
+	</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/tabulator/dist/js/tabulator.min.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+
+		var singleDateEditor = function (cell, onRendered, success, cancel, editorParams) {
+			var editor = document.createElement("input");
+			editor.setAttribute("type", "text");
+			editor.style.cssText = "width:100%; height:100%;";
+			onRendered(function () {
+				flatpickr(editor, {
+					enableTime: true,
+					dateFormat: "d/m/Y",
+					onClose: function (selectedDates, dateStr, instance) {
+						if (selectedDates.length) {
+							success(dateStr);
+						} else {
+							cancel();
+						}
+					}
+				});
+				editor.focus();
+			});
+			return editor;
+		};
+
+		var currentPage = 1;
+		var currentPageSize = 5;
+
+		var table = new Tabulator("#main-table", {
+			pagination: true,
+			paginationCounter: "rows",
+			paginationMode: "remote",
+			filterMode: "remote",
+			sortMode: "remote",
+			paginationSize: currentPageSize,
+			paginationSizeSelector: [5, 10, 15, 20],
+			height: 500,
+			layout: "fitColumns",
+			ajaxURL: "@Model.EndpointUrl",
+			ajaxContentType: "json",
+			ajaxConfig: {
+				method: "POST",
+			},
+			columns: [
+				{ title: "Transaction Id", field: "id", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Product Id", field: "productId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Purchase Id", field: "purchaseOrderId", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Quantity", field: "quantity", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{ title: "Total Price", field: "totalAmount", sorter: "number", headerFilterFunc: ">=", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 150 },
+				{
+					title: "Transaction Date", field: "createdAtUtc", hozAlign: "center", width: 200, sorter: "datetime", sorterParams: { format: "DD/MM/YYYY" },
+					formatter: function (cell) {
+						var value = cell.getValue();
+						return luxon.DateTime.fromISO(value).toFormat("dd/MM/yyyy");
+					},
+					headerFilter: singleDateEditor, headerFilterFunc: ">=", headerFilterPlaceholder: "DD/MM/YYYY", width: 200, headerTooltip: true
+				},
+				{ title: "Transaction Type", field: "transactionType", sorter: "string", headerFilterFunc: "like", headerFilter: "input", formatter: "textarea", headerTooltip: true, width: 200 }
+
+			],
+		});
+
+	});
+</script>
+

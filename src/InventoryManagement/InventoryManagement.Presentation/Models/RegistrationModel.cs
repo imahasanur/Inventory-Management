@@ -89,8 +89,10 @@ namespace InventoryManagement.Presentation.Models
             if (result.Succeeded)
             {
 
-				await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("User", "true"));
-                await _signInManager.SignInAsync(user, isPersistent: false);
+				//await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("User", "true"));
+				await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("role", "user"));
+
+				await _signInManager.SignInAsync(user, isPersistent: false);
                 return (null, ReturnUrl);
             }
             else
