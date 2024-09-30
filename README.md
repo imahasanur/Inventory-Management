@@ -10,10 +10,13 @@ It is a AspNet MVC Core (v 7.0) Project with two Class lIbrary project. Project 
 3. Admin will get all premission for all CRUD operations.
 4. User can view categories, products, suppliers, create & view purchase and sale orders, view transactions, view reports.
 5. Search operations added for every table columns. Multiple field search can be performed together.
-6. .env file should be added in InventoryManagement.Presentation project. Should see .env.example file to environment variables.
+6. Uploaded photo is resized in server side.
+7. .env file should be added in InventoryManagement.Presentation project. Should see .env.example file to set up environment variables.
 
 ## Databse ERD Diagram
-![ERD diagram of the project](https://drive.google.com/file/d/1_XF60hR9rEJbLodYqsDxf-0s7_GZSOSf/view?usp=sharing)
+[ERD diagram picture link of the project tables](https://drive.google.com/file/d/1_XF60hR9rEJbLodYqsDxf-0s7_GZSOSf/view?usp=sharing)
+
+[ER Diagram of Database](ModelDatabases1.png)
 
 ## Used Technology
 1. FrontEnd: Html, Bootstrap, Fontawesome icon, Javascript, JQuery, SweetAlert2
