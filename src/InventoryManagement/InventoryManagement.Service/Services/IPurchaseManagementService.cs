@@ -12,7 +12,8 @@ namespace InventoryManagement.Service.Services
     {
 		Task CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
 		Task<(IList<PurchaseOrdersDto> data, int total, int totalDisplay)> GetPurchaseOrdersAsync(int pageIndex, int pageSize);
-		Task DeleteByIdAsync(Guid id);
+        Task<IList<PurchaseOrdersDto>> GetAllPurchaseOrderAsync();
+        Task DeleteByIdAsync(Guid id);
 		Task<PurchaseOrder> GetPurchaseOrderByIdAsync(Guid id);
 		Task EditPurchaseOrderAsync(EditPurchaseOrderDto dto);
 	}

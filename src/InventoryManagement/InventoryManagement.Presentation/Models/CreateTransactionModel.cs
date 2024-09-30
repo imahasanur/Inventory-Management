@@ -24,8 +24,10 @@ namespace InventoryManagement.Presentation.Models
 		public string TransactionType { get; set; }
 		[Required]
 		public DateTime CreatedAtUtc { get; set; }
+		[Required]
+        public string User { get; set; }
 
-		public CreateTransactionModel() { }
+        public CreateTransactionModel() { }
 
 		public CreateTransactionModel(ITransactionManagementService transactionManagementService)
 		{

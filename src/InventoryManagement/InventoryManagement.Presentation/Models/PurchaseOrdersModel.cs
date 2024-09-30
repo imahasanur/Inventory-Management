@@ -29,5 +29,10 @@ namespace InventoryManagement.Presentation.Models
 		{
 			return await _purchaseManagementService.GetPurchaseOrdersAsync(pageIndex,pageSize);
 		}
-	}
+
+        public async Task<IList<PurchaseOrdersDto>> GetAllPurchaseOrderAsync()
+        {
+            return await _purchaseManagementService.GetAllPurchaseOrderAsync();
+        }
+    }
 }

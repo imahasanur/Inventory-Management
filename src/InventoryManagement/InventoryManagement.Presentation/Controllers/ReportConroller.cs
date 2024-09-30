@@ -11,6 +11,8 @@ using InventoryManagement.Presentation.Others;
 using System.Drawing;
 using InventoryManagement.Data.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using InventoryManagement.Data.Membership;
+using Microsoft.AspNetCore.Identity;
 
 namespace InventoryManagement.Presentation.Controllers
 {
@@ -19,18 +21,22 @@ namespace InventoryManagement.Presentation.Controllers
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger<ReportController> _logger;
+        private SignInManager<ApplicationUser> _signInManager;
         private readonly LinkGenerator _linkGenerator;
 		public ReportController(ILifetimeScope scope,
             ILogger<ReportController> logger,
+            SignInManager<ApplicationUser> signInManager,
             LinkGenerator linkGenerator)
         {
             _scope = scope;
             _logger = logger;
+            _signInManager = signInManager;
             _linkGenerator = linkGenerator;
         }
 
 
-		public async Task<IActionResult> GetInventory()
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetInventory()
 		{
 			var url = _linkGenerator.GetUriByAction(HttpContext, controller: "Report", action: "GetInventory");
 			if (url is null)
@@ -42,7 +48,8 @@ namespace InventoryManagement.Presentation.Controllers
 		}
 
 
-		[HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+        [HttpPost]
 		public async Task<IActionResult> GetInventory([FromBody] TabulatorQueryDto dto)
 		{
 			var model = new ProductsModel();
@@ -110,11 +117,17 @@ namespace InventoryManagement.Presentation.Controllers
             model.Resolve(_scope);
             var allTransactionDetails = await model.GetAllTransactionAsync();
             var filterTransaction = new List<TransactionsDto>();
-            foreach(var transaction in allTransactionDetails)
+            var email = _signInManager.Context.User.Identity?.Name;
+      
+            foreach (var transaction in allTransactionDetails)
             {
-                if (transaction.TransactionType == "sale")
+
+                if (email == "admin@gmail.com" && transaction.TransactionType == "sale")
+                    filterTransaction.Add(transaction);
+                else if (email == transaction.User && transaction.TransactionType == "sale")
                     filterTransaction.Add(transaction);
             }
+   
 
             var dataSet = filterTransaction;
             var queryable = dataSet.AsQueryable();
@@ -182,11 +195,15 @@ namespace InventoryManagement.Presentation.Controllers
 			model.Resolve(_scope);
 			var allTransactionDetails = await model.GetAllTransactionAsync();
 			var filterTransaction = new List<TransactionsDto>();
-			foreach (var transaction in allTransactionDetails)
+            var email = _signInManager.Context.User.Identity?.Name;
+
+            foreach (var transaction in allTransactionDetails)
 			{
-				if (transaction.TransactionType == "purchase")
-					filterTransaction.Add(transaction);
-			}
+                if (email == "admin@gmail.com" && transaction.TransactionType == "purchase")
+                    filterTransaction.Add(transaction);
+                else if (email == transaction.User && transaction.TransactionType == "purchase")
+                    filterTransaction.Add(transaction);
+            }
 
 			var dataSet = filterTransaction;
 			var queryable = dataSet.AsQueryable();

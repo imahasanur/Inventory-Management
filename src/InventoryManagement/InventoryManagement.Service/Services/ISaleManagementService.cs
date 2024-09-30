@@ -10,9 +10,11 @@ namespace InventoryManagement.Service.Services
 {
 	public interface ISaleManagementService
 	{
-		Task CreateSaleOrderAsync(CreateSaleOrderDto dto);
+        
+        Task CreateSaleOrderAsync(CreateSaleOrderDto dto);
 		Task<(IList<SaleOrdersDto> data, int total, int totalDisplay)> GetSaleOrdersAsync(int pageIndex, int pageSize);
-		Task DeleteByIdAsync(Guid id);
+        Task<IList<SaleOrdersDto>> GetAllSaleOrderAsync();
+        Task DeleteByIdAsync(Guid id);
 		Task<SaleOrder> GetSaleOrderByIdAsync(Guid id);
 		Task EditSaleOrderAsync(EditSaleOrderDto dto);
 	}

@@ -30,6 +30,7 @@ namespace InventoryManagement.Presentation.Models
         [Required]
         public DateTime CreatedAtUtc { get; set; }
         public DateTime? UpdatedAtUtc { get; set; }
+        public string? User { get; set; }
 
         public IList<ProductsDto>? Products { get; set; }
 

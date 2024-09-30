@@ -11,7 +11,8 @@ namespace InventoryManagement.Service.Domain.Repositories
 	public interface IPurchaseOrderRepository : IRepositoryBase<PurchaseOrder, Guid>
 	{
 		Task<(IList<PurchaseOrder> data, int total, int totalDisplay)> GetPurchaseOrdersAsync(int pageIndex, int pageSize);
-		Task CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
+        Task<IList<PurchaseOrder>> GetAllPurchaseOrderAsync();
+        Task CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
 		Task<PurchaseOrder> GetPurchaseOrderByIdAsync(Guid id);
 		Task EditPurchaseOrderAsync(PurchaseOrder entityObj);
 		Task DeleteByIdAsync(Guid id);

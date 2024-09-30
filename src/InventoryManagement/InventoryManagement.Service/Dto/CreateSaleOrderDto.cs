@@ -14,6 +14,7 @@ namespace InventoryManagement.Service.Dto
         public required int UnitPrice { get; set; }
         public required int TotalAmount { get; set; }
         public required string Status { get; set; }
+        public required string User { get; set; }
         public required DateTime CreatedAtUtc { get; set; }
     }
 }

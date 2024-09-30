@@ -15,6 +15,7 @@ namespace InventoryManagement.Service.Dto
         public required int Quantity { get; set; }
         public required int TotalAmount { get; set; }
         public required string TransactionType { get; set; }
+        public required string User { get; set; }
         public required DateTime CreatedAtUtc { get; set; }
         public DateTime? UpdatedAtUtc { get; set; }
 	}

@@ -10,6 +10,9 @@ using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using InventoryManagement.Data.Membership;
+using Microsoft.AspNetCore.Identity;
+using InventoryManagement.Data.Extensions;
 
 namespace InventoryManagement.Presentation.Controllers
 {
@@ -19,12 +22,15 @@ namespace InventoryManagement.Presentation.Controllers
         private readonly ILifetimeScope _scope;
         private readonly ILogger<PurchaseOrderController> _logger;
         private readonly LinkGenerator _linkGenerator;
-		public PurchaseOrderController(ILifetimeScope scope,
+        private SignInManager<ApplicationUser> _signInManager;
+        public PurchaseOrderController(ILifetimeScope scope,
             ILogger<PurchaseOrderController> logger,
+            SignInManager<ApplicationUser> signInManager,
             LinkGenerator linkGenerator)
         {
             _scope = scope;
             _logger = logger;
+            _signInManager = signInManager;
             _linkGenerator = linkGenerator;
         }
 
@@ -58,7 +64,8 @@ namespace InventoryManagement.Presentation.Controllers
             model.CreatedAtUtc = DateTime.UtcNow;
 			model.Status = "pending";
 			model.TotalAmount = model.UnitPrice * model.Quantity;
-			var orderDto = await model.BuildAdapter().AdaptToTypeAsync<CreatePurchaseOrderDto>();
+			model.User = _signInManager.Context.User.Identity?.Name;
+            var orderDto = await model.BuildAdapter().AdaptToTypeAsync<CreatePurchaseOrderDto>();
 			model.Resolve(_scope);
 			await model.CreatePurchaseOrderAsync(orderDto);
 
@@ -83,10 +90,27 @@ namespace InventoryManagement.Presentation.Controllers
 		{
 			var model = new PurchaseOrdersModel();
 			model.Resolve(_scope);
-			var allPurchaseDetails = await model.GetPurchaseOrdersAsync(dto.Page, dto.Size);
+			var allPurchaseDetails = await model.GetAllPurchaseOrderAsync();
+            var filterPurchaseDetails = new List<PurchaseOrdersDto>();
+			var email = _signInManager.Context.User.Identity?.Name;
+			if(email != "admin@gmail.com")
+			{
+                foreach (var purchase in allPurchaseDetails)
+                {
+                    if(purchase.User == email)
+					{
+						filterPurchaseDetails.Add(purchase);
+					}
+				}
+            }
+			else
+			{
+				filterPurchaseDetails = (List<PurchaseOrdersDto>)allPurchaseDetails;
+			}
+            
 
-			var dataSet = allPurchaseDetails;
-			var queryable = dataSet.data.AsQueryable();
+            var dataSet = filterPurchaseDetails;
+			var queryable = dataSet.AsQueryable();
 			var count = 0;
 
 			IQueryable<PurchaseOrdersDto>? filteredData = null;
@@ -99,34 +123,38 @@ namespace InventoryManagement.Presentation.Controllers
 					dto.Filters
 				);
 				filteredData = queryable.Where(expression);
-				count = allPurchaseDetails.total;
+				count = filteredData.Count();
 			}
 
-			if (dto.Sorters.Count > 0)
-			{
-				var elem = dto.Sorters[0];
-				var expression = $"x => {elem.Field.Pascalize()} {elem.Dir.ToUpper()}";
+            if (dto.Sorters.Count > 0)
+            {
+                var elem = dto.Sorters[0];
+                var expression = $"x => {elem.Field.Pascalize()} {elem.Dir.ToUpper()}";
 
-				if (filteredData is null)
-				{
-					filteredData = queryable.OrderBy(expression);
-					count = allPurchaseDetails.total;
-				}
-				else
-				{
-					filteredData = filteredData.OrderBy(expression);
-				}
-			}
+                if (filteredData is null)
+                {
+                    filteredData = queryable.OrderBy(expression);
+                    count = queryable.Count();
+                }
+                else
+                {
+                    filteredData = filteredData.OrderBy(expression);
+                }
+            }
 
-			if (filteredData is null)
-			{
-				filteredData = queryable;
-				count = allPurchaseDetails.total;
-			}
+            if (filteredData is null)
+            {
+                filteredData = queryable.Paginate(dto.Page, dto.Size);
+                count = queryable.Count();
+            }
+            else
+            {
+                filteredData = filteredData.Paginate(dto.Page, dto.Size);
+            }
 
-			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
-			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-		}
+            var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
+            return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
+        }
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)
 		{
@@ -206,6 +234,7 @@ namespace InventoryManagement.Presentation.Controllers
 			model.Products = products;
 			model.Suppliers = suppliers;
 			TempData["Status"] = model.Status;
+			TempData["User"] = model.User;
 			return View(model);
 		}
 
@@ -225,6 +254,7 @@ namespace InventoryManagement.Presentation.Controllers
 
 			model.UpdatedAtUtc = DateTime.UtcNow;
 			model.TotalAmount = model.Quantity * model.UnitPrice;
+			model.User = (string?)TempData["User"];
 			var response = await model.BuildAdapter().AdaptToTypeAsync<EditPurchaseOrderDto>();
 			model.Resolve(_scope);
 			await model.EditPurchaseOrderAsync(response);
@@ -254,6 +284,7 @@ namespace InventoryManagement.Presentation.Controllers
 				transactionModel.TotalAmount = model.TotalAmount;
 				transactionModel.TransactionType = "purchase";
 				transactionModel.CreatedAtUtc = DateTime.UtcNow;
+				transactionModel.User = model.User;
 
 				var transactionDto = await transactionModel.BuildAdapter().AdaptToTypeAsync<CreateTransactionDto>();
 				transactionModel.Resolve(_scope);

@@ -15,6 +15,7 @@ namespace InventoryManagement.Service.Domain.Entities
 		public int Quantity { get; set; }
 		public int TotalAmount { get; set; }
         public string TransactionType { get; set; }
+		public string User { get; set; }
 		public DateTime CreatedAtUtc { get; set; }
 		public DateTime? UpdatedAtUtc { get; set; }
 	}

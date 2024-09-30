@@ -30,5 +30,10 @@ namespace InventoryManagement.Presentation.Models
 			return await _saleManagementService.GetSaleOrdersAsync(pageIndex,pageSize);
 		}
 
-	}
+        public async Task<IList<SaleOrdersDto>> GetAllSaleOrderAsync()
+        {
+            return await _saleManagementService.GetAllSaleOrderAsync();
+        }
+
+    }
 }

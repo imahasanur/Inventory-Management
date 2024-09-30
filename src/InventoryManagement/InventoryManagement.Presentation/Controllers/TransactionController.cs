@@ -10,6 +10,9 @@ using Humanizer;
 using InventoryManagement.Presentation.Others;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using InventoryManagement.Data.Membership;
+using Microsoft.AspNetCore.Identity;
+using InventoryManagement.Data.Extensions;
 
 namespace InventoryManagement.Presentation.Controllers
 {
@@ -19,13 +22,16 @@ namespace InventoryManagement.Presentation.Controllers
         private readonly ILifetimeScope _scope;
         private readonly ILogger<TransactionController> _logger;
         private readonly LinkGenerator _linkGenerator;
-		private readonly string _imageDirectory = "wwwroot/uploads";
+        private SignInManager<ApplicationUser> _signInManager;
+        private readonly string _imageDirectory = "wwwroot/uploads";
 		public TransactionController(ILifetimeScope scope,
             ILogger<TransactionController> logger,
+            SignInManager<ApplicationUser> signInManager,
             LinkGenerator linkGenerator)
         {
             _scope = scope;
             _logger = logger;
+            _signInManager = signInManager;
             _linkGenerator = linkGenerator;
         }
 
@@ -47,10 +53,26 @@ namespace InventoryManagement.Presentation.Controllers
 		{
 			var model = new TransactionsModel();
 			model.Resolve(_scope);
-			var allTransactionDetails = await model.GetTransactionsAsync(dto.Page, dto.Size);
+			var allTransactionDetails = await model.GetAllTransactionAsync();
+            var filterTransactionDetails = new List<TransactionsDto>();
+            var email = _signInManager.Context.User.Identity?.Name;
+            if (email != "admin@gmail.com")
+            {
+                foreach (var transaction in allTransactionDetails)
+                {
+                    if (transaction.User == email)
+                    {
+                        filterTransactionDetails.Add(transaction);
+                    }
+                }
+            }
+            else
+            {
+                filterTransactionDetails = (List<TransactionsDto>)allTransactionDetails;
+            }
 
-			var dataSet = allTransactionDetails;
-			var queryable = dataSet.data.AsQueryable();
+            var dataSet = filterTransactionDetails;
+			var queryable = dataSet.AsQueryable();
 			var count = 0;
 
 			IQueryable<TransactionsDto>? filteredData = null;
@@ -63,34 +85,38 @@ namespace InventoryManagement.Presentation.Controllers
 					dto.Filters
 				);
 				filteredData = queryable.Where(expression);
-				count = allTransactionDetails.total;
+				count = filteredData.Count();
 			}
 
-			if (dto.Sorters.Count > 0)
-			{
-				var elem = dto.Sorters[0];
-				var expression = $"x => {elem.Field.Pascalize()} {elem.Dir.ToUpper()}";
+            if (dto.Sorters.Count > 0)
+            {
+                var elem = dto.Sorters[0];
+                var expression = $"x => {elem.Field.Pascalize()} {elem.Dir.ToUpper()}";
 
-				if (filteredData is null)
-				{
-					filteredData = queryable.OrderBy(expression);
-					count = allTransactionDetails.total;
-				}
-				else
-				{
-					filteredData = filteredData.OrderBy(expression);
-				}
-			}
+                if (filteredData is null)
+                {
+                    filteredData = queryable.OrderBy(expression);
+                    count = queryable.Count();
+                }
+                else
+                {
+                    filteredData = filteredData.OrderBy(expression);
+                }
+            }
 
-			if (filteredData is null)
-			{
-				filteredData = queryable;
-				count = allTransactionDetails.total;
-			}
+            if (filteredData is null)
+            {
+                filteredData = queryable.Paginate(dto.Page, dto.Size);
+                count = queryable.Count();
+            }
+            else
+            {
+                filteredData = filteredData.Paginate(dto.Page, dto.Size);
+            }
 
-			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
-			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-		}
+            var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
+            return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
+        }
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)
 		{

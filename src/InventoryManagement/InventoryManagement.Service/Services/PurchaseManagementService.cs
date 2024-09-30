@@ -26,7 +26,14 @@ namespace InventoryManagement.Service.Services
 			return (result, entityList.total, entityList.totalDisplay);
 		}
 
-		public async Task CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
+        public async Task<IList<PurchaseOrdersDto>> GetAllPurchaseOrderAsync()
+        {
+            var entityList = await _unitOfWork.PurchaseOrderRepository.GetAllPurchaseOrderAsync();
+            var result = await entityList.BuildAdapter().AdaptToTypeAsync<List<PurchaseOrdersDto>>();
+            return result;
+        }
+
+        public async Task CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
 		{
 			await _unitOfWork.PurchaseOrderRepository.CreatePurchaseOrderAsync(dto);
 			await _unitOfWork.SaveAsync();

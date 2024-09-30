@@ -67,7 +67,7 @@ namespace InventoryManagement.Data
             .HasForeignKey(x => x.ProductId);
 
 			//seed an admin
-			var adminUserId = Guid.NewGuid();
+			var adminUserId = new Guid("D88D9D62-162D-4044-BE26-FC89C796B4E7");
 			var passwordHasher = new PasswordHasher<ApplicationUser>();
 			var adminUser = new ApplicationUser
 			{

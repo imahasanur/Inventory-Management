@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Presentation.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240929115402_SeedAdminWithClaims")]
-    partial class SeedAdminWithClaims
+    [Migration("20240930105223_UpdatePurchaseSaleTransactionTable")]
+    partial class UpdatePurchaseSaleTransactionTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,10 +163,10 @@ namespace InventoryManagement.Presentation.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6"),
+                            Id = new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7589169f-2e2d-4e7e-b2d8-3ba2b505ea9c",
-                            CreatedAtUtc = new DateTime(2024, 9, 29, 11, 54, 2, 430, DateTimeKind.Utc).AddTicks(2383),
+                            ConcurrencyStamp = "642e5b89-30ae-4954-8923-60944cea9e3d",
+                            CreatedAtUtc = new DateTime(2024, 9, 30, 10, 52, 22, 902, DateTimeKind.Utc).AddTicks(6010),
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -175,7 +175,7 @@ namespace InventoryManagement.Presentation.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIKibsy6q9XwSJM9d9WAqRzVTjJjcCVKd8MYWJboZ18rV7a/ye+XH5g5XyULf3Zn+w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFIWgdIAHBwT8qcoLr7113dOFwNmnm8UBPYA3Q/x/2YnRQUlRyaTZOlBq4TlLKFRXQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -212,14 +212,14 @@ namespace InventoryManagement.Presentation.Data.Migrations
                             Id = 1,
                             ClaimType = "role",
                             ClaimValue = "admin",
-                            UserId = new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6")
+                            UserId = new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "role",
                             ClaimValue = "user",
-                            UserId = new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6")
+                            UserId = new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7")
                         });
                 });
 
@@ -385,6 +385,10 @@ namespace InventoryManagement.Presentation.Data.Migrations
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
@@ -425,6 +429,10 @@ namespace InventoryManagement.Presentation.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -499,6 +507,10 @@ namespace InventoryManagement.Presentation.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

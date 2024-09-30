@@ -28,6 +28,7 @@ namespace InventoryManagement.Presentation.Models
         public int UnitPrice { get; set; }
         public int? TotalAmount { get; set; }
         public string? Status { get; set; }
+        public string? User { get; set; }
         public DateTime CreatedAtUtc { get; set; }
 		public IList<ProductsDto>? Products { get; set; }
         public IList<SuppliersDto>? Suppliers { get; set; }

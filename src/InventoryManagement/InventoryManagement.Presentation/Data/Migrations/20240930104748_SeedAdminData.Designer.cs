@@ -4,6 +4,7 @@ using InventoryManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Presentation.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240930104748_SeedAdminData")]
+    partial class SeedAdminData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,8 +165,8 @@ namespace InventoryManagement.Presentation.Data.Migrations
                         {
                             Id = new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "642e5b89-30ae-4954-8923-60944cea9e3d",
-                            CreatedAtUtc = new DateTime(2024, 9, 30, 10, 52, 22, 902, DateTimeKind.Utc).AddTicks(6010),
+                            ConcurrencyStamp = "ce20fba1-c3e2-4ffb-9fbe-f6a2c0e4d9b1",
+                            CreatedAtUtc = new DateTime(2024, 9, 30, 10, 47, 48, 155, DateTimeKind.Utc).AddTicks(4238),
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -172,7 +175,7 @@ namespace InventoryManagement.Presentation.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFIWgdIAHBwT8qcoLr7113dOFwNmnm8UBPYA3Q/x/2YnRQUlRyaTZOlBq4TlLKFRXQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKfGXP7WxPNzbQ042nDZIU5KcZZ6W8x7hQshpkioc/RqCxb42//r1KykSli5UVX1jA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -382,10 +385,6 @@ namespace InventoryManagement.Presentation.Data.Migrations
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
@@ -426,10 +425,6 @@ namespace InventoryManagement.Presentation.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -504,10 +499,6 @@ namespace InventoryManagement.Presentation.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

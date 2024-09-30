@@ -17,6 +17,7 @@ namespace InventoryManagement.Service.Domain.Entities
 		public int UnitPrice { get; set; }
 		public int TotalAmount { get; set; }
 		public string Status { get; set; }
+        public string User { get; set; }
         public DateTime CreatedAtUtc { get; set; }
 		public DateTime? UpdatedAtUtc { get; set; }
 	}

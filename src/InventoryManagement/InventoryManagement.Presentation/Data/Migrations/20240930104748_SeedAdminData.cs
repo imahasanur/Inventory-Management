@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventoryManagement.Presentation.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedAdminWithClaims : Migration
+    public partial class SeedAdminData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,15 +16,15 @@ namespace InventoryManagement.Presentation.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAtUtc", "Email", "EmailConfirmed", "FirstName", "FullName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdatedAtUtc", "UserName" },
-                values: new object[] { new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6"), 0, "7589169f-2e2d-4e7e-b2d8-3ba2b505ea9c", new DateTime(2024, 9, 29, 11, 54, 2, 430, DateTimeKind.Utc).AddTicks(2383), "admin@gmail.com", true, "Admin", "Admin User", "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEIKibsy6q9XwSJM9d9WAqRzVTjJjcCVKd8MYWJboZ18rV7a/ye+XH5g5XyULf3Zn+w==", null, false, "", false, null, "admin@gmail.com" });
+                values: new object[] { new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7"), 0, "ce20fba1-c3e2-4ffb-9fbe-f6a2c0e4d9b1", new DateTime(2024, 9, 30, 10, 47, 48, 155, DateTimeKind.Utc).AddTicks(4238), "admin@gmail.com", true, "Admin", "Admin User", "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEKfGXP7WxPNzbQ042nDZIU5KcZZ6W8x7hQshpkioc/RqCxb42//r1KykSli5UVX1jA==", null, false, "", false, null, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "role", "admin", new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6") },
-                    { 2, "role", "user", new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6") }
+                    { 1, "role", "admin", new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7") },
+                    { 2, "role", "user", new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7") }
                 });
         }
 
@@ -44,7 +44,7 @@ namespace InventoryManagement.Presentation.Data.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
-                keyValue: new Guid("8dfc0fc9-42cd-4327-b270-50cb36540da6"));
+                keyValue: new Guid("d88d9d62-162d-4044-be26-fc89c796b4e7"));
         }
     }
 }

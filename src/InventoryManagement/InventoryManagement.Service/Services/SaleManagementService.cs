@@ -26,7 +26,14 @@ namespace InventoryManagement.Service.Services
 			return (result, entityList.total, entityList.totalDisplay);
 		}
 
-		public async Task CreateSaleOrderAsync(CreateSaleOrderDto dto)
+        public async Task<IList<SaleOrdersDto>> GetAllSaleOrderAsync()
+        {
+            var entityList = await _unitOfWork.SaleOrderRepository.GetAllSaleOrderAsync();
+            var result = await entityList.BuildAdapter().AdaptToTypeAsync<List<SaleOrdersDto>>();
+            return result;
+        }
+        
+        public async Task CreateSaleOrderAsync(CreateSaleOrderDto dto)
 		{
 			await _unitOfWork.SaleOrderRepository.CreateSaleOrderAsync(dto);
 			await _unitOfWork.SaveAsync();
