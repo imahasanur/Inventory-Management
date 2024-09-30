@@ -17,6 +17,5 @@ namespace InventoryManagement.Service.Services
         Task DeleteByIdAsync(Guid id);
 		Task DeleteByTransactionProductIdAsync(Guid id);
 		Task<Transaction> GetTransactionByIdAsync(Guid id);
-		//Task EditProductAsync(EditProductDto dto);
 	}
 }

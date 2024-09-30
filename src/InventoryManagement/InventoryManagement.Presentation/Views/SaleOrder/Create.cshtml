@@ -12,7 +12,6 @@
 		<form asp-controller="SaleOrder" asp-action="Create" asp-area=""  asp-antiforgery="true" enctype="multipart/form-data">
 			<div class="card-body">
 				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
 				<div class="row row-cards">
 					<div class="p-1 m-3 col-md-12 col-sm-12 ">
 						<h3 class="card-title text-center">Add Sale Order</h3>
@@ -30,7 +29,6 @@
 							<span asp-validation-for="ProductId" class="text-danger"></span>
 						</div>
 					</div>
-
 					<div class="col-sm-6 col-md-6">
 						<div class="mb-3">
 							<label asp-for="Quantity" class="form-label"></label>
@@ -45,9 +43,7 @@
 							<span asp-validation-for="UnitPrice" class="text-danger"></span>
 						</div>
 					</div>
-
 					<input type="hidden" asp-for="ProductName" id="ProductName" />
-
 				</div>
 			</div>
 			<div class="card-footer text-center">

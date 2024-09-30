@@ -38,7 +38,6 @@ namespace InventoryManagement.Presentation.Controllers
 			var products = await productsModel.GetAllProductAsync();
             model.Resolve(_scope);
 			model.Products = products;
-       
 			return View(model);
         }
 
@@ -58,7 +57,6 @@ namespace InventoryManagement.Presentation.Controllers
 			var orderDto = await model.BuildAdapter().AdaptToTypeAsync<CreateSaleOrderDto>();
 			model.Resolve(_scope);
 			await model.CreateSaleOrderAsync(orderDto);
-
 			return RedirectToAction("Create");
 		}
 
@@ -125,7 +123,6 @@ namespace InventoryManagement.Presentation.Controllers
 
 			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
 			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-
 		}
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)
@@ -177,7 +174,6 @@ namespace InventoryManagement.Presentation.Controllers
 					expression.Append(" && ");
 				}
 			}
-
 			return expression.ToString();
 		}
 

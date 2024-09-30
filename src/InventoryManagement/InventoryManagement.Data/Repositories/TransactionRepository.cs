@@ -40,11 +40,6 @@ namespace InventoryManagement.Data.Repositories
 			return await GetByIdAsync(id);
 		}
 
-		//public async Task EditProductAsync(Product entityObj)
-		//{
-		//	await EditAsync(entityObj);
-		//}
-
 		public async Task DeleteByIdAsync(Guid id)
 		{
 			Expression<Func<Transaction, bool>> expression = x => x.Id == id;

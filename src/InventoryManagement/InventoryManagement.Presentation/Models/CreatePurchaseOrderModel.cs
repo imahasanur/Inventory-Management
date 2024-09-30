@@ -26,13 +26,9 @@ namespace InventoryManagement.Presentation.Models
         [Required(ErrorMessage = "Unit Price is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Unit Price must be greater than zero")]
         public int UnitPrice { get; set; }
-	
         public int? TotalAmount { get; set; }
-
         public string? Status { get; set; }
-	
         public DateTime CreatedAtUtc { get; set; }
-
 		public IList<ProductsDto>? Products { get; set; }
         public IList<SuppliersDto>? Suppliers { get; set; }
 

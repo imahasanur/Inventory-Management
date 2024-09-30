@@ -114,7 +114,6 @@ namespace InventoryManagement.Presentation.Controllers
 
 			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
 			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-
 		}
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)

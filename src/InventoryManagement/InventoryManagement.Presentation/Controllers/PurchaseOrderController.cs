@@ -42,7 +42,6 @@ namespace InventoryManagement.Presentation.Controllers
             model.Resolve(_scope);
 			model.Products = products;
 			model.Suppliers = suppliers;
-       
 			return View(model);
         }
 
@@ -127,7 +126,6 @@ namespace InventoryManagement.Presentation.Controllers
 
 			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
 			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-
 		}
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)
@@ -179,7 +177,6 @@ namespace InventoryManagement.Presentation.Controllers
 					expression.Append(" && ");
 				}
 			}
-
 			return expression.ToString();
 		}
 
@@ -220,6 +217,7 @@ namespace InventoryManagement.Presentation.Controllers
 			{
 				return View(model);
 			}
+
 			if (TempData.ContainsKey("CreatedAtUtc"))
 			{
 				model.CreatedAtUtc = (DateTime)TempData["CreatedAtUtc"];

@@ -35,10 +35,8 @@ namespace InventoryManagement.Service.Services
 		
 		public async Task CreateCategoryAsync(CreateCategoryDto dto)
 		{
-			//var employee = await dto.BuildAdapter().AdaptToTypeAsync<Category>();
 			await _unitOfWork.CategoryRepository.CreateCategoryAsync(dto);
 			await _unitOfWork.SaveAsync();
-
 		}
 
 		public async Task<Category> GetCategoryByIdAsync(Guid id)

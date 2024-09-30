@@ -45,13 +45,6 @@ namespace InventoryManagement.Service.Services
 			return entity;
 		}
 
-		//public async Task EditProductAsync(EditProductDto dto)
-		//{
-		//	var entityObj = await dto.BuildAdapter().AdaptToTypeAsync<Product>();
-		//	await _unitOfWork.ProductRepository.EditProductAsync(entityObj);
-		//	await _unitOfWork.SaveAsync();
-		//}
-
 		public async Task DeleteByIdAsync(Guid id)
 		{
 			await _unitOfWork.TransactionRepository.DeleteByIdAsync(id);

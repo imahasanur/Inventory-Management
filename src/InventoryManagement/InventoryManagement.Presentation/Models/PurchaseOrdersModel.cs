@@ -29,10 +29,5 @@ namespace InventoryManagement.Presentation.Models
 		{
 			return await _purchaseManagementService.GetPurchaseOrdersAsync(pageIndex,pageSize);
 		}
-
-		//public async Task<IList<CategoriesDto>> GetAllCategoryAsync()
-		//{
-		//	return await _productManagementService.GetAllCategoryAsync();
-		//}
 	}
 }

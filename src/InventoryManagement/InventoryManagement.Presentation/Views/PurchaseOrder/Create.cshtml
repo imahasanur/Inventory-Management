@@ -43,7 +43,6 @@
 							<span asp-validation-for="ProductId" class="text-danger"></span>
 						</div>
 					</div>
-
 					<div class="col-sm-6 col-md-6">
 						<div class="mb-3">
 							<label asp-for="Quantity" class="form-label"></label>
@@ -85,7 +84,7 @@
 		supplierDropdown.addEventListener('change', function () {
 			const selectedOption = supplierDropdown.options[supplierDropdown.selectedIndex];
 			const supplierName = selectedOption.getAttribute('data-category-name');
-			supplierNameInput.value = supplierName; // Set the hidden field value
+			supplierNameInput.value = supplierName; 
 		});
 
 		const productDropdown = document.getElementById('productDropdown');
@@ -95,10 +94,8 @@
 		productDropdown.addEventListener('change', function () {
 			const selectedOption = productDropdown.options[productDropdown.selectedIndex];
 			const productName = selectedOption.getAttribute('data-category-name');
-			productNameInput.value = productName; // Set the hidden field value
+			productNameInput.value = productName; 
 		});
 	});
 
 </script>
-
-

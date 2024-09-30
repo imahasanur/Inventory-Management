@@ -46,6 +46,7 @@ namespace InventoryManagement.Presentation.Controllers
                 _logger.LogInformation("Model state is not valid");
 				return View(model);
 			}
+
 			if (!Directory.Exists(_imageDirectory))
 			{
 				Directory.CreateDirectory(_imageDirectory);
@@ -62,15 +63,12 @@ namespace InventoryManagement.Presentation.Controllers
 					var resizedImage = ResizeImage(image, 250, 333); // Resize to 3:4 aspect ratio
 					resizedImage.Save(filePath, ImageFormat.Jpeg);
 				}
-
 				model.PhotoUrl = $"/uploads/{uniqueFileName}";
 			}
             model.CreatedAtUtc = DateTime.UtcNow;
-
             var supplierDto = await model.BuildAdapter().AdaptToTypeAsync<CreateSupplierDto>();
 			model.Resolve(_scope);
 			await model.CreateSupplierAsync(supplierDto);
-
 			return RedirectToAction("Create");
 		}
 
@@ -95,7 +93,6 @@ namespace InventoryManagement.Presentation.Controllers
 					graphics.DrawImage(img, destRect, 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, wrapMode);
 				}
 			}
-
 			return destImage;
 		}
 
@@ -160,7 +157,6 @@ namespace InventoryManagement.Presentation.Controllers
 
 			var totalPages = (int)Math.Ceiling(count / (decimal)dto.Size);
 			return Ok(new { data = filteredData, last_row = count, last_page = totalPages });
-
 		}
 
 		private static string ExpressionMaker(IList<string> allowedColumns, IList<string> enumColumns, IList<TabulatorFilterDto> filters)
@@ -212,7 +208,6 @@ namespace InventoryManagement.Presentation.Controllers
 					expression.Append(" && ");
 				}
 			}
-
 			return expression.ToString();
 		}
 
@@ -242,6 +237,7 @@ namespace InventoryManagement.Presentation.Controllers
 			{
 				return View(model);
 			}
+
 			if (TempData.ContainsKey("CreatedAtUtc"))
 			{
 				model.CreatedAtUtc = (DateTime)TempData["CreatedAtUtc"];

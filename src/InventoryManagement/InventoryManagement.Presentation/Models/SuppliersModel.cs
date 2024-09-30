@@ -34,7 +34,5 @@ namespace InventoryManagement.Presentation.Models
         {
             return await _supplierManagementService.GetAllSupplierAsync();
         }
-        
-
     }
 }

@@ -45,13 +45,11 @@ namespace InventoryManagement.Presentation.Models
         [Display(Name ="Confirm Password")]
         [Compare("Password",ErrorMessage ="Type properly! It's a mismatch with password")]
         public string ConfirmPassword { get; set; }
-
         public string? ReturnUrl { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
         public string CaptchaInput { get; set; }
-
 
         public RegistrationModel() { }
 
@@ -88,8 +86,6 @@ namespace InventoryManagement.Presentation.Models
             
             if (result.Succeeded)
             {
-
-				//await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("User", "true"));
 				await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("role", "user"));
 
 				await _signInManager.SignInAsync(user, isPersistent: false);

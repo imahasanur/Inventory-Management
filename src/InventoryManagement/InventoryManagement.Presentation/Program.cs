@@ -28,7 +28,6 @@ Log.Logger = new LoggerConfiguration()
 	.ReadFrom.Configuration(configuration)
 	.CreateBootstrapLogger();
 
-
 try
 {
 	var builder = WebApplication.CreateBuilder(args);
@@ -89,7 +88,6 @@ try
         options.Cookie.IsEssential = true;
     });
 
-
     var app = builder.Build();
 
 	// Configure the HTTP request pipeline.
@@ -112,7 +110,6 @@ try
     app.UseSession();
     app.UseAuthentication();
 	app.UseAuthorization();
-
 
 	app.MapControllerRoute(
 		name: "default",
